@@ -12,10 +12,11 @@ public interface TicketMapper {
 
     @Mappings({
             @Mapping(source = "idTicket", target = "ticketId"),
-            @Mapping(source = "passengerEntity", target = "passenger")
+            @Mapping(source = "idPassenger", target = "passengerId")
     })
     Ticket toTicket(TicketEntity ticketEntity);
 
     @InheritInverseConfiguration
+    @Mapping(target = "passengerEntity", ignore = true)
     TicketEntity toTicketEntity(Ticket ticket);
 }

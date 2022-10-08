@@ -1,6 +1,9 @@
 package com.practice.flightbooking.persistence.entity;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -8,13 +11,18 @@ import java.util.List;
 
 @Entity
 @Table(name = "passenger")
-@Data
+@Getter
+@Setter
+@Builder
 public class PassengerEntity {
 
     @Id
     @GeneratedValue
     @Column(name = "id_passenger")
     private Integer idPassenger;
+
+    @Column(name = "id_travel")
+    private Integer idTravel;
 
     @Column(name = "last_name")
     private String lastName;
@@ -28,7 +36,7 @@ public class PassengerEntity {
 
     //TODO verificar si este apartado es un string o es otra cosa
     @Column(name = "telephone_number")
-    private Integer telephoneNumber;
+    private String telephoneNumber;
 
     private String country;
 
@@ -44,9 +52,9 @@ public class PassengerEntity {
 
     private String nationality;
 
-    @ManyToMany
-    private List<TravelEntity> travelEntity;
+    @OneToMany(mappedBy = "travelEntity", cascade = {CascadeType.ALL})
+    private List<PassengersTravelEntity> passengersTravelEntities;
 
-    @OneToMany
-    private TicketEntity ticketEntity;
+    @OneToMany(mappedBy = "passengerEntity")
+    private List<TicketEntity> ticketEntity;
 }

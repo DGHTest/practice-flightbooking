@@ -9,11 +9,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface AirportMapper {
 
-    @Mapping(source = "idAirport", target = "airportId")
     Airport toAirport(AirportEntity airportEntity);
 
     @InheritInverseConfiguration
-    @Mapping(target = "arrivalFlightEntities", ignore = true)
-    @Mapping(target = "departureFlightEntities", ignore = true)
     AirportEntity toAirportEntity(Airport airport);
 }

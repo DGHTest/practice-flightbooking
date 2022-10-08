@@ -9,8 +9,8 @@ public class Ticket {
 
     private int ticketId;
 
-    private LocalDateTime boardingTime;
+    private int passengerId;
 
-    private Passenger passenger;
+    private LocalDateTime boardingTime;
 
 }

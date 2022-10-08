@@ -7,17 +7,23 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring")
+import java.util.List;
+
+@Mapper(componentModel = "spring", uses = {ArrivalFlightMapper.class, DepartureMapper.class})
 public interface TravelMapper {
 
     @Mappings({
             @Mapping(source = "idTravel", target = "travelId"),
+            @Mapping(source = "idArrivalFlight", target = "arrivalFlightId"),
+            @Mapping(source = "idDeparture", target = "departureId"),
+            @Mapping(source = "idPassenger", target = "passengerId"),
             @Mapping(source = "departureEntity", target = "departure"),
             @Mapping(source = "arrivalFlightEntity", target = "arrivalFlight")
     })
     Travel toTravel(TravelEntity travelEntity);
 
+    List<Travel> toTravels(List<TravelEntity> travelsEntity);
+
     @InheritInverseConfiguration
-    @Mapping(target = "passengerEntities", ignore = true)
     TravelEntity toTravelEntity(Travel travel);
 }

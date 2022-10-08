@@ -3,11 +3,14 @@ package com.practice.flightbooking.domain.service;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class Passenger {
 
     private int passengerId;
+
+    private int travelId;
 
     private String lastName;
 
@@ -17,7 +20,7 @@ public class Passenger {
 
     private String email;
 
-    private int telephoneNumber;
+    private String telephoneNumber;
 
     private String country;
 
@@ -31,5 +34,7 @@ public class Passenger {
 
     private String nationality;
 
-    private Travel travel;
+    private List<PassengersTravel> passengersTravel;
+
+    private List<Ticket> tickets;
 }

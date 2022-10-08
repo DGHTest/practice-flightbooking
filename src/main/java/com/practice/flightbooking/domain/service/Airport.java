@@ -5,15 +5,11 @@ import lombok.Data;
 @Data
 public class Airport {
 
-    private int airportId;
-
-    private String name;
-
-    private String iata;
-
     private String country;
+
+    private String state;
 
     private String city;
 
-    private String timezone;
+    private String iata;
 }

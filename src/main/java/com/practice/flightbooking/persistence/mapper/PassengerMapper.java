@@ -5,15 +5,19 @@ import com.practice.flightbooking.persistence.entity.PassengerEntity;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {PassengersTravelMapper.class, TicketMapper.class})
 public interface PassengerMapper {
 
-    @Mapping(source = "idPassenger", target = "passengerId")
-    @Mapping(source = "travelEntity", target = "travel")
+    @Mappings({
+            @Mapping(source = "idPassenger", target = "passengerId"),
+            @Mapping(source = "idTravel", target = "travelId"),
+            @Mapping(source = "passengersTravelEntities", target = "passengersTravel"),
+            @Mapping(source = "ticketEntity", target = "tickets")
+    })
     Passenger toPassenger(PassengerEntity passengerEntity);
 
     @InheritInverseConfiguration
-    @Mapping(target = "ticketEntity", ignore = true)
     PassengerEntity toPassengerEntity(Passenger passenger);
 }

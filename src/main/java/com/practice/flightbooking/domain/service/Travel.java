@@ -7,9 +7,16 @@ public class Travel {
 
     private int travelId;
 
+    private int arrivalFlightId;
+
+    private int departureId;
+
+    private int passengerId;
+
     private double price;
+
+    private ArrivalFlight arrivalFlight;
 
     private Departure departure;
 
-    private ArrivalFlight arrivalFlight;
 }
