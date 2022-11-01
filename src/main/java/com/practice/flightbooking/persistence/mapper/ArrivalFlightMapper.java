@@ -6,11 +6,14 @@ import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {AirportMapper.class, TravelMapper.class})
+@Mapper(componentModel = "spring")
 public interface ArrivalFlightMapper {
+
+    ArrivalFlightMapper arrivalFlightMapper = Mappers.getMapper(ArrivalFlightMapper.class);
 
     @Mappings({
             @Mapping(source = "idArrivalFlight", target = "arrivalFlightId"),

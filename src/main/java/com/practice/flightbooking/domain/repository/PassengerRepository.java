@@ -14,6 +14,4 @@ public interface PassengerRepository {
 
     void delete(int passengerId);
 
-    Optional<Passenger> findLastTravel();
-
 }

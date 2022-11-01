@@ -1,10 +1,15 @@
 package com.practice.flightbooking.domain.service;
 
-import lombok.Data;
 
-@Data
 public class PassengersTravel {
 
-    private int travelId;
+    private int travelsPassengerId;
 
+    public int getTravelsPassengerId() {
+        return travelsPassengerId;
+    }
+
+    public void setTravelsPassengerId(int travelsPassengerId) {
+        this.travelsPassengerId = travelsPassengerId;
+    }
 }

@@ -33,9 +33,4 @@ public class PassengerRepositoryImpl implements PassengerRepository {
 
     }
 
-    @Override
-    public Optional<Passenger> findLastTravel() {
-        return Optional.empty();
-    }
-
 }

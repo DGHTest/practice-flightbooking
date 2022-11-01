@@ -6,9 +6,12 @@ import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface TicketMapper {
+
+    TicketMapper ticketMapper = Mappers.getMapper(TicketMapper.class);
 
     @Mappings({
             @Mapping(source = "idTicket", target = "ticketId"),

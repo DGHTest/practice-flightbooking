@@ -23,19 +23,19 @@ public class TravelRepositoryImpl implements TravelRepostitory {
 
     @Override
     public List<Travel> getAllTravels() {
-        List<TravelEntity> travels = (List<TravelEntity>) travelCrudRepository.findAll();
+        List<TravelEntity> travels = (List<TravelEntity>) travelCrudRepository.findByStatus(true);
         return travelMapper.toTravels(travels);
     }
 
     @Override
     public Optional<List<Travel>> getByArrivalFlight(int airportId) {
-        List<TravelEntity> travels = travelCrudRepository.findByIdArrivalFlight(airportId);
+        List<TravelEntity> travels = travelCrudRepository.findByIdArrivalFlightAndStatus(airportId, true).get();
         return Optional.of(travelMapper.toTravels(travels));
     }
 
     @Override
     public Optional<List<Travel>> getByDeparture(int departureId) {
-        List<TravelEntity> travels = travelCrudRepository.findByIdDeparture(departureId);
+        List<TravelEntity> travels = travelCrudRepository.findByIdDepartureAndStatus(departureId, true).get();
         return Optional.of(travelMapper.toTravels(travels));
     }
 }
