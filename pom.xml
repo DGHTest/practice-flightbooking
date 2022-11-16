@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
-			<version>1.4.2.Final</version>
+			<version>1.5.3.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
@@ -63,8 +63,11 @@
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
-
-
+		<dependency>
+			<groupId>org.awaitility</groupId>
+			<artifactId>awaitility</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -107,7 +110,7 @@
 					</annotationProcessorPaths>
 					<compilerArgs>
 						<compilerArg>
-							-Amapstruct.defaultComponentModel=spring
+							-AMapStruct.defaultComponentModel=spring
 						</compilerArg>
 					</compilerArgs>
 				</configuration>

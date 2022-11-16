@@ -1,6 +1,6 @@
 package com.practice.flightbooking.persistence.crud;
 
-import com.practice.flightbooking.persistence.crud.repositoryinterfaces.BasicCrudRepository;
+import com.practice.flightbooking.persistence.crud.crudinterfaces.BasicCrudRepository;
 import com.practice.flightbooking.persistence.entity.TravelEntity;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

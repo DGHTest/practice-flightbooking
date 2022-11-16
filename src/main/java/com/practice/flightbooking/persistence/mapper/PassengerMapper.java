@@ -5,7 +5,7 @@ import com.practice.flightbooking.persistence.entity.PassengerEntity;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring", uses = {PassengerTravelsMapper.class, TicketMapper.class})
+@Mapper(componentModel = "spring", uses = {PassengersTravelMapper.class})
 public interface PassengerMapper {
 
     PassengerMapper passengerMapper = Mappers.getMapper(PassengerMapper.class);
@@ -18,6 +18,6 @@ public interface PassengerMapper {
     Passenger toPassenger(PassengerEntity passengerEntity);
 
     @InheritInverseConfiguration
-    @Mapping(target = "active", ignore = true)
+    @Mapping(target = "status", ignore = true)
     PassengerEntity toPassengerEntity(Passenger passenger);
 }

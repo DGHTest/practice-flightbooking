@@ -8,6 +8,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface AirportMapper {
 
@@ -15,6 +17,8 @@ public interface AirportMapper {
 
     @Mapping(source = "idAirport", target = "airportId")
     Airport toAirport(AirportEntity airportEntity);
+
+    List<Airport> toAirports(List<AirportEntity> airportEntities);
 
     @InheritInverseConfiguration
     @Mappings({

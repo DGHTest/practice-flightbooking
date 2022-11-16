@@ -3,6 +3,7 @@ package com.practice.flightbooking.crud;
 import com.practice.flightbooking.persistence.crud.DepartureCrudRepository;
 import com.practice.flightbooking.persistence.entity.ArrivalFlightEntity;
 import com.practice.flightbooking.persistence.entity.DepartureEntity;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,8 +14,10 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -126,17 +129,37 @@ class DepartureCrudRepositoryTest {
     @Test
     @DisplayName("Should update all departure in the database where the time condition occurs")
     public void updateDepartureEntityStatus() {
-        crudRepository.updateDepartureStatus(LocalDateTime.now());
+        crudRepository.updateDepartureStatus(2);
 
         List<DepartureEntity> departureEntities = crudRepository.findByStatus(true);
 
         assertAll(
                 () -> assertThat(departureEntities.size()).isEqualTo(3),
                 () -> assertTrue(departureEntities.contains(departure)),
-                () -> assertEquals(2, departureEntities.get(0).getIdDeparture()),
+                () -> assertEquals(1, departureEntities.get(0).getIdDeparture()),
                 () -> assertThat(departureEntities).filteredOn(
                         arrivalFlight -> arrivalFlight.getStatus().equals(true)
                 )
+        );
+    }
+
+    @Test
+    @DisplayName("Should update the status to false in the database of all departures that satisfy the time condition")
+    public void updateArrival_in_StatusController() {
+        List<DepartureEntity> allDepartures = crudRepository.findByStatus(true);
+
+        allDepartures.stream().filter(time ->
+                        LocalDateTime.now().until(time.getDepartureTime(),
+                                ChronoUnit.HOURS) <= TimeUnit.HOURS.toHours(32) ||
+                                time.getDepartureTime().isBefore(LocalDateTime.now()))
+                .forEach(departure -> crudRepository.updateDepartureStatus(departure.getIdDeparture()));
+
+        List<DepartureEntity> newAllDepartures = crudRepository.findByStatus(true);
+
+        assertAll(
+                () -> Assertions.assertThat(newAllDepartures.size()).isEqualTo(1),
+                () -> assertEquals(Arrays.asList(4), newAllDepartures.stream().map(travel -> travel.getIdDeparture()).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(3), newAllDepartures.stream().map(travel -> travel.getIdAirport()).collect(Collectors.toList()))
         );
     }
 }

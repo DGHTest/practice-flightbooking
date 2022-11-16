@@ -114,12 +114,7 @@ public class DepartureEntity {
         }
 
         public DepartureEntity create() {
-            validate();
             return new DepartureEntity(this);
-        }
-
-        private void validate() {
-
         }
     }
 

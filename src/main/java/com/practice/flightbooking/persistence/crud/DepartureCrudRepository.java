@@ -1,6 +1,6 @@
 package com.practice.flightbooking.persistence.crud;
 
-import com.practice.flightbooking.persistence.crud.repositoryinterfaces.BasicCrudRepository;
+import com.practice.flightbooking.persistence.crud.crudinterfaces.BasicCrudRepository;
 import com.practice.flightbooking.persistence.entity.DepartureEntity;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +17,6 @@ public interface DepartureCrudRepository extends BasicCrudRepository<DepartureEn
     List<DepartureEntity> findByStatus(boolean status);
 
     @Modifying
-    @Query("UPDATE DepartureEntity d SET d.status = false WHERE d.departureTime < :departureTime")
-    void updateDepartureStatus(@Param("departureTime") LocalDateTime departureTime);
+    @Query("UPDATE DepartureEntity d SET d.status = false WHERE d.idDeparture = :id")
+    void updateDepartureStatus(@Param("id") int id);
 }

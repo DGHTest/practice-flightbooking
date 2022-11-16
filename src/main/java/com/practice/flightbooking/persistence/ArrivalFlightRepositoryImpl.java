@@ -21,19 +21,41 @@ public class ArrivalFlightRepositoryImpl implements ArrivalFlightRepository {
     private ArrivalFlightMapper arrivalFlightMapper;
 
     @Override
-    public Optional<ArrivalFlight> getArrivalById(int arrivalId) {
-        return arrivalCrudRepository.findById(arrivalId)
-                .map(arrivalEntity -> arrivalFlightMapper.toArrivalFlight(arrivalEntity));
-    }
-
-    @Override
     public List<ArrivalFlight> getAllArrivalFlights() {
-        return null;
+        List<ArrivalFlightEntity> allArrivalFlights = arrivalCrudRepository.findByStatus(true);
+        return arrivalFlightMapper.toArrivalFlights(allArrivalFlights);
     }
 
     @Override
-    public ArrivalFlight saveArrival(ArrivalFlight arrivalFlight) {
+    public ArrivalFlight getArrivalById(int arrivalId) throws Exception {
+        Optional<ArrivalFlightEntity> arrivalFlightById = arrivalCrudRepository.findById(arrivalId);
+
+        if (arrivalFlightById.isPresent()) {
+            return arrivalFlightMapper.toArrivalFlight(arrivalFlightById.get());
+        } else {
+            throw new Exception("Arrival flight by id not found");
+        }
+    }
+
+    @Override
+    public List<ArrivalFlight> getByIdAirport(int airportId) throws Exception {
+        Optional<List<ArrivalFlightEntity>> arrivalFlightByIdAirport = arrivalCrudRepository.findByIdAirportAndStatus(airportId, true);
+
+        if (arrivalFlightByIdAirport.isPresent()) {
+            return arrivalFlightMapper.toArrivalFlights(arrivalFlightByIdAirport.get());
+        } else {
+            throw new Exception("Airport id not found");
+        }
+    }
+
+    @Override
+    public ArrivalFlight saveArrival(ArrivalFlight arrivalFlight) throws Exception {
         ArrivalFlightEntity arrivalFlightEntity = arrivalFlightMapper.toArrivalFlightEntity(arrivalFlight);
-        return arrivalFlightMapper.toArrivalFlight(arrivalCrudRepository.save(arrivalFlightEntity));
+
+        if (!arrivalCrudRepository.existsById(arrivalFlightEntity.getIdArrivalFlight())) {
+            return arrivalFlightMapper.toArrivalFlight(arrivalCrudRepository.save(arrivalFlightEntity));
+        } else {
+            throw new Exception("Id already exist");
+        }
     }
 }

@@ -20,31 +20,41 @@ class TicketMapperTest {
     public void testForEntityToService() {
 
         TicketEntity entity = new TicketEntity.Builder()
+                .setIdTicket(34)
                 .setIdPassenger(4)
+                .setIdTravel(39)
                 .setBoardingTime(LocalDateTime.now())
                 .create();
 
         Ticket ticket = ticketMapper.toTicket(entity);
 
-        //assertNull(entity.getIdTicket());
-        assertNotNull(ticket.getTicketId());
-        assertEquals(entity.getIdPassenger(), ticket.getPassengerId());
-        assertEquals(entity.getBoardingTime(), ticket.getBoardingTime());
-
+        assertAll(
+                () -> assertEquals(entity.getIdTicket(), ticket.getTicketId()),
+                () -> assertEquals(entity.getIdPassenger(), ticket.getPassengerId()),
+                () -> assertEquals(entity.getIdTravel(), ticket.getTravelId()),
+                () -> assertEquals(entity.getBoardingTime(), ticket.getBoardingTime())
+        );
     }
 
     @Test
     @DisplayName("Should transform the ticketService information to ticketEntity information")
     public void testForServiceToEntity() {
-        Ticket service = new Ticket();
-        service.setTicketId(5);
-        service.setPassengerId(8);
+        Ticket service = Ticket.builder()
+                .setTicketId(5)
+                .setPassengerId(8)
+                .setTravelId(13)
+                .setBoardingTime(LocalDateTime.now())
+                .create();
 
         TicketEntity ticketEntity = ticketMapper.toTicketEntity(service);
 
-        assertNotNull(ticketEntity);
-        assertEquals(service.getPassengerId(), ticketEntity.getIdPassenger());
-        assertEquals(service.getBoardingTime(), ticketEntity.getBoardingTime());
+        assertAll(
+                () -> assertNotNull(ticketEntity),
+                () -> assertEquals(service.getTicketId(), ticketEntity.getIdTicket()),
+                () -> assertEquals(service.getPassengerId(), ticketEntity.getIdPassenger()),
+                () -> assertEquals(service.getTravelId(), ticketEntity.getIdTravel()),
+                () -> assertEquals(service.getBoardingTime(), ticketEntity.getBoardingTime())
+        );
     }
 
 }

@@ -3,13 +3,14 @@ package com.practice.flightbooking.mappers;
 import com.practice.flightbooking.domain.service.Travel;
 import com.practice.flightbooking.persistence.entity.TravelEntity;
 import com.practice.flightbooking.persistence.mapper.TravelMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TravelMapperTest {
 
@@ -18,7 +19,8 @@ class TravelMapperTest {
     @Test
     @DisplayName("Should transform the travelEntity information to travelService information")
     public void testForEntityToService() {
-        TravelEntity entity = new TravelEntity.Builder()
+        TravelEntity entity = TravelEntity.builder()
+                .setIdTravel(53)
                 .setPrice(BigDecimal.valueOf(543.54))
                 .setIdDeparture(5)
                 .setIdArrivalFlight(3)
@@ -26,10 +28,11 @@ class TravelMapperTest {
 
         Travel travel = travelMapper.toTravel(entity);
 
-        Assertions.assertAll(
-                () -> Assertions.assertEquals(entity.getPrice(), travel.getPrice()),
-                () -> Assertions.assertEquals(entity.getIdDeparture(), travel.getDepartureId()),
-                () -> Assertions.assertEquals(entity.getIdArrivalFlight(), travel.getArrivalFlightId())
+        assertAll(
+                () -> assertEquals(entity.getIdTravel(), travel.getTravelId()),
+                () -> assertEquals(entity.getPrice(), travel.getPrice()),
+                () -> assertEquals(entity.getIdDeparture(), travel.getDepartureId()),
+                () -> assertEquals(entity.getIdArrivalFlight(), travel.getArrivalFlightId())
         );
 
     }
@@ -37,15 +40,20 @@ class TravelMapperTest {
     @Test
     @DisplayName("Should transform the travelService information to travelEntity information")
     public void testForServiceToEntity() {
-        Travel service = new Travel();
-        service.setTravelId(89);
-        service.setPrice(BigDecimal.valueOf(646.65));
-        service.setDepartureId(76);
-        service.setArrivalFlightId(5);
+        Travel service = Travel.builder()
+                .setTravelId(89)
+                .setPrice(BigDecimal.valueOf(646.65))
+                .setDepartureId(76)
+                .setArrivalFlightId(5)
+                .create();
 
         TravelEntity travelEntity = travelMapper.toTravelEntity(service);
 
-        Assertions.assertEquals(service.getTravelId(), travelEntity.getIdTravel());
-        Assertions.assertEquals(service.getPrice(), travelEntity.getPrice());
+        assertAll(
+                () -> assertEquals(service.getTravelId(), travelEntity.getIdTravel()),
+                () -> assertEquals(service.getPrice(), travelEntity.getPrice()),
+                () -> assertEquals(service.getDepartureId(), travelEntity.getIdDeparture()),
+                () -> assertEquals(service.getArrivalFlightId(), travelEntity.getIdArrivalFlight())
+        );
     }
 }

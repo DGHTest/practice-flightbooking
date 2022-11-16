@@ -2,6 +2,7 @@ package com.practice.flightbooking.crud;
 
 import com.practice.flightbooking.persistence.crud.ArrivalCrudRepository;
 import com.practice.flightbooking.persistence.entity.ArrivalFlightEntity;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,8 +13,10 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -77,9 +80,9 @@ class ArrivalCrudRepositoryTest {
                 .setArrivalTime(LocalDateTime.of(2023, Month.NOVEMBER, 23, 16, 30, 00))
                 .create();
 
-        crudRepository.save(arrivalFlight);
+        ArrivalFlightEntity arrivalFlightSaved = crudRepository.save(arrivalFlight);
 
-        ArrivalFlightEntity arrivalFlightSaved = crudRepository.findById(5).get();
+        //ArrivalFlightEntity arrivalFlightSaved = crudRepository.findById(5).get();
 
         assertAll(
                 () -> assertEquals(arrivalFlight.getIdAirport(), arrivalFlightSaved.getIdAirport()),
@@ -125,9 +128,9 @@ class ArrivalCrudRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should update all arrivalFlight in the database where the time condition occurs")
+    @DisplayName("Should update the status of a specific arrivalFlight by his id in the database")
     public void updateArrivalFlightEntityStatus() {
-        crudRepository.updateArrivalStatus(LocalDateTime.now());
+        crudRepository.updateArrivalStatus(1);
 
         List<ArrivalFlightEntity> allArrivalFlight = crudRepository.findByStatus(true);
 
@@ -139,6 +142,25 @@ class ArrivalCrudRepositoryTest {
                         arrivalFlight -> arrivalFlight.getStatus().equals(true)
                 )
         );
+    }
 
+    @Test
+    @DisplayName("Should update the status to false in the database of all arrivalFlights that satisfy the time condition")
+    public void updateArrival_in_StatusController() {
+        List<ArrivalFlightEntity> allArrivals = crudRepository.findByStatus(true);
+
+        allArrivals.stream().filter(time ->
+                        LocalDateTime.now().until(time.getArrivalTime(),
+                                ChronoUnit.HOURS) <= TimeUnit.HOURS.toHours(32) ||
+                        time.getArrivalTime().isBefore(LocalDateTime.now()))
+                .forEach(arrival -> crudRepository.updateArrivalStatus(arrival.getIdArrivalFlight()));
+
+        List<ArrivalFlightEntity> newAllArrivals = crudRepository.findByStatus(true);
+
+        assertAll(
+                () -> Assertions.assertThat(newAllArrivals.size()).isEqualTo(1),
+                () -> assertEquals(Arrays.asList(4), newAllArrivals.stream().map(travel -> travel.getIdArrivalFlight()).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(3), newAllArrivals.stream().map(travel -> travel.getIdAirport()).collect(Collectors.toList()))
+        );
     }
 }

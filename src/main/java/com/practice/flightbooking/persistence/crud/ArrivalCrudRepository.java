@@ -1,6 +1,6 @@
 package com.practice.flightbooking.persistence.crud;
 
-import com.practice.flightbooking.persistence.crud.repositoryinterfaces.BasicCrudRepository;
+import com.practice.flightbooking.persistence.crud.crudinterfaces.BasicCrudRepository;
 import com.practice.flightbooking.persistence.entity.ArrivalFlightEntity;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +17,7 @@ public interface ArrivalCrudRepository extends BasicCrudRepository<ArrivalFlight
     List<ArrivalFlightEntity> findByStatus(boolean status);
 
     @Modifying
-    @Query("UPDATE ArrivalFlightEntity af SET af.status = false WHERE af.arrivalTime < :arrivalTime")
-    void updateArrivalStatus(@Param("arrivalTime") LocalDateTime arrivalTime);
+    @Query("UPDATE ArrivalFlightEntity af SET af.status = false WHERE af.idArrivalFlight = :id")
+    void updateArrivalStatus(@Param("id") int id);
 
 }

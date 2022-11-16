@@ -29,5 +29,6 @@ public interface TravelMapper {
     @InheritInverseConfiguration
     @Mapping(target = "passengersEntities", ignore = true)
     @Mapping(target = "status", ignore = true)
+    @Mapping(target = "ticketEntities", ignore = true)
     TravelEntity toTravelEntity(Travel travel);
 }

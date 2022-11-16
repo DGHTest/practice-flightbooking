@@ -5,7 +5,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "passenger")
@@ -51,7 +50,7 @@ public class PassengerEntity {
     private String nationality;
 
     @Column(nullable=false)
-    private Boolean active;
+    private Boolean status;
 
     @OneToMany(mappedBy = "passengerEntity")
     private List<TicketEntity> ticketEntity;
@@ -107,8 +106,8 @@ public class PassengerEntity {
         return nationality;
     }
 
-    public Boolean getActive() {
-        return active;
+    public Boolean getStatus() {
+        return status;
     }
 
     public List<PassengersTravelsEntity> getTravelsEntities() {
@@ -136,7 +135,7 @@ public class PassengerEntity {
         this.nationality = builder.nationality;
         this.travelsEntities = builder.travelsEntities;
         this.ticketEntity = builder.ticketEntity;
-        this.active = builder.active;
+        this.status = builder.status;
     }
 
     public static PassengerEntity.Builder builder() {
@@ -159,7 +158,7 @@ public class PassengerEntity {
         private String nationality;
         private List<PassengersTravelsEntity> travelsEntities;
         private List<TicketEntity> ticketEntity;
-        private Boolean active = true;
+        private Boolean status = true;
 
         public Builder setIdPassenger(final Integer idPassenger){
             this.idPassenger = idPassenger;
@@ -231,18 +230,13 @@ public class PassengerEntity {
             return this;
         }
 
-        public Builder setActive(final Boolean active){
-            this.active = active;
+        public Builder setStatus(final Boolean status){
+            this.status = status;
             return this;
         }
 
         public PassengerEntity create() {
-            validate();
             return new PassengerEntity(this);
-        }
-
-        private void validate() {
-
         }
     }
 
@@ -261,7 +255,7 @@ public class PassengerEntity {
                 ", passportNumber=" + passportNumber +
                 ", expirationDate=" + expirationDate +
                 ", nationality='" + nationality + '\'' +
-                ", active=" + active +
+                ", active=" + status +
                 '}';
     }
 }

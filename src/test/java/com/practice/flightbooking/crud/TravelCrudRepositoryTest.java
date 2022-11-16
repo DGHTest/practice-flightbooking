@@ -16,8 +16,11 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -161,13 +164,10 @@ class TravelCrudRepositoryTest {
     @Test
     @DisplayName("Should update all travels in the database where arrivalEntities are false")
     public void updateTravelStatus() {
-        arrivalCrudRepository.updateArrivalStatus(LocalDateTime.now());
+        arrivalCrudRepository.updateArrivalStatus(1);
 
-        List<Integer> idArrival = arrivalCrudRepository.findByStatus(false).stream().map(arrival -> arrival.getIdArrivalFlight()).collect(Collectors.toList());
-
-        for (Integer id: idArrival) {
-            crudRepository.updateTravelStatus(id);
-        }
+        arrivalCrudRepository.findByStatus(false).stream()
+                .forEach(trav -> crudRepository.updateTravelStatus(trav.getIdArrivalFlight()));
 
         List<TravelEntity> allTravels = crudRepository.findByStatus(true);
 
@@ -181,6 +181,44 @@ class TravelCrudRepositoryTest {
                 () -> assertThat(allTravels).filteredOn(
                         travels -> travels.getStatus().equals(true)
                 )
+        );
+    }
+
+    @Test
+    @DisplayName("Should update the status to false in the database of all departures that satisfy the time condition")
+    public void updateArrival_in_StatusController() {
+
+        arrivalCrudRepository.save(ArrivalFlightEntity.builder().setIdAirport(1).setArrivalTime(LocalDateTime.of(2025, Month.AUGUST, 11, 10, 00, 00)).create());
+
+        crudRepository.save(TravelEntity.builder().setIdArrivalFlight(4).setIdDeparture(2).setPrice(BigDecimal.valueOf(20000.00)).create());
+
+        List<TravelEntity> allTravels = crudRepository.findByStatus(true);
+
+        /*
+        arrivalCrudRepository.findByStatus(false).stream()
+                .map(ArrivalFlightEntity::getIdArrivalFlight)
+                        .filter(id -> allTravels.stream()
+                                .map(TravelEntity::getIdArrivalFlight).collect(Collectors.toList()).contains(id))
+                                .forEach(travel -> crudRepository.updateTravelStatus(travel));*/
+
+        arrivalCrudRepository.findByStatus(true).stream().filter(time ->
+                        LocalDateTime.now().until(time.getArrivalTime(),
+                                ChronoUnit.HOURS) <= TimeUnit.HOURS.toHours(32) ||
+                                time.getArrivalTime().isBefore(LocalDateTime.now()))
+                .forEach(arrival -> {
+                    arrivalCrudRepository.updateArrivalStatus(arrival.getIdArrivalFlight());
+                    crudRepository.updateTravelStatus(arrival.getIdArrivalFlight());
+                });
+
+        List<TravelEntity> newAllTravels = crudRepository.findByStatus(true);
+
+        assertAll(
+                () -> org.assertj.core.api.Assertions.assertThat(arrivalCrudRepository.findByStatus(true).size()).isEqualTo(1),
+                () -> org.assertj.core.api.Assertions.assertThat(newAllTravels.size()).isEqualTo(1),
+                () -> assertEquals(Arrays.asList(5), newAllTravels.stream().map(travel -> travel.getIdTravel()).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(4), newAllTravels.stream().map(travel -> travel.getIdArrivalFlight()).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(2), newAllTravels.stream().map(travel -> travel.getIdDeparture()).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList("20000.0"), newAllTravels.stream().map(travel -> travel.getPrice().toString()).collect(Collectors.toList()))
         );
     }
 }

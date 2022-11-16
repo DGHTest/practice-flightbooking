@@ -155,12 +155,7 @@ public class AirportEntity {
         }
 
         public AirportEntity create() {
-            validate();
             return new AirportEntity(this);
-        }
-
-        private void validate() {
-
         }
     }
 

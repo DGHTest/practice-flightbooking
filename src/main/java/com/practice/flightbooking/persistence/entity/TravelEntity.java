@@ -1,7 +1,5 @@
 package com.practice.flightbooking.persistence.entity;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
@@ -44,6 +42,9 @@ public class TravelEntity {
     @OneToMany(mappedBy = "travelEntity")
     private List<PassengersTravelsEntity> passengersEntities;
 
+    @OneToMany(mappedBy = "idTravel")
+    private List<TicketEntity> ticketEntities;
+
     public Integer getIdTravel() {
         return idTravel;
     }
@@ -75,6 +76,10 @@ public class TravelEntity {
         return passengersEntities;
     }
 
+    public List<TicketEntity> getTicketEntities() {
+        return ticketEntities;
+    }
+
     protected TravelEntity() {}
 
     private TravelEntity(TravelEntity.Builder builder) {
@@ -86,6 +91,7 @@ public class TravelEntity {
         this.departureEntity = builder.departureEntity;
         this.arrivalFlightEntity = builder.arrivalFlightEntity;
         this.passengersEntities = builder.passengersEntities;
+        this.ticketEntities = builder.ticketEntities;
     }
 
     public static TravelEntity.Builder builder() {
@@ -109,6 +115,8 @@ public class TravelEntity {
         private ArrivalFlightEntity arrivalFlightEntity;
 
         private List<PassengersTravelsEntity> passengersEntities;
+
+        private List<TicketEntity> ticketEntities;
 
         public Builder setIdTravel(final Integer idTravel){
             this.idTravel = idTravel;
@@ -150,13 +158,13 @@ public class TravelEntity {
             return this;
         }
 
-        public TravelEntity create() {
-            validate();
-            return new TravelEntity(this);
+        public Builder setTicketEntities(final List<TicketEntity> ticketEntities){
+            this.ticketEntities = ticketEntities;
+            return this;
         }
 
-        private void validate() {
-
+        public TravelEntity create() {
+            return new TravelEntity(this);
         }
     }
 

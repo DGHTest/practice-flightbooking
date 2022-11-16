@@ -8,12 +8,17 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring"/*, uses = {TravelMapper.class}*/)
-public interface PassengerTravelsMapper {
+import java.util.List;
 
-    //PassengerTravelsMapper mapper = Mappers.getMapper(PassengerTravelsMapper.class);
-    @Mapping(source = "passengerTravelsId.idTravel", target = "travelsPassengerId")
+@Mapper(componentModel = "spring")
+public interface PassengersTravelMapper {
+
+    //PassengersTravelMapper mapper = Mappers.getMapper(PassengersTravelMapper.class);
+
+    @Mapping(source = "passengerTravelsId.idTravel", target = "travelId")
     PassengersTravel toPassengersTravel(PassengersTravelsEntity passengersTravelsEntity);
+
+    List<PassengersTravel> toPassengersTravels(List<PassengersTravelsEntity> passengersTravelsEntities);
 
     @InheritInverseConfiguration
     @Mappings({

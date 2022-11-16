@@ -1,8 +1,6 @@
 package com.practice.flightbooking.mappers;
 
-import com.practice.flightbooking.domain.service.Airport;
 import com.practice.flightbooking.domain.service.Departure;
-import com.practice.flightbooking.persistence.entity.AirportEntity;
 import com.practice.flightbooking.persistence.entity.DepartureEntity;
 import com.practice.flightbooking.persistence.mapper.DepartureMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -10,57 +8,52 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
+import java.time.Month;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DepartureMapperTest {
 
-    private DepartureEntity entity;
     @Autowired
     private DepartureMapper departureMapper = Mappers.getMapper(DepartureMapper.class);
 
-
     @Test
-    @DisplayName("Should transform the departureEntity information to departureService information")
+    @DisplayName("Should transform the entity information to service information")
     public void testForEntityToService() {
-
-        AirportEntity airportEntity = new AirportEntity.Builder()
-                .setCity("Juarez")
-                .setCountry("Mexico")
-                .setState("Coahuila")
-                .setIata("IAD")
-                .create();
-
-        entity = new DepartureEntity.Builder()
+        DepartureEntity entity = new DepartureEntity.Builder()
+                .setIdDeparture(34)
                 .setIdAirport(9)
-                .setAirportEntity(airportEntity)
+                .setDepartureTime(LocalDateTime.of(2023, Month.APRIL, 23, 21, 20, 12))
+                .setStatus(true)
                 .create();
 
         Departure departure = departureMapper.toDeparture(entity);
 
-        assertEquals(entity.getIdAirport(), departure.getAirportId());
-        assertEquals(entity.getAirportEntity().getCity(), departure.getAirport().getCity());
-
+        assertAll(
+                () -> assertEquals(entity.getIdDeparture(), departure.getDepartureId()),
+                () -> assertEquals(entity.getIdAirport(), departure.getAirportId()),
+                () -> assertEquals(entity.getDepartureTime(), departure.getDepartureTime())
+        );
     }
 
     @Test
     @DisplayName("Should transform the service information to entity information")
     public void testForServiceToEntity() {
-        Departure service = new Departure();
-        service.setDepartureId(8);
-        service.setAirportId(2);
-
-        Airport airport = new Airport();
-        airport.setCity("Neza");
-        airport.setCountry("Mexico");
-        airport.setState("Mexico");
-        airport.setIata("YRT");
-        service.setAirport(airport);
-
+        Departure service = Departure.builder()
+                .setDepartureId(8)
+                .setAirportId(2)
+                .setDepartureTime(LocalDateTime.of(2023, Month.APRIL, 23, 21, 20, 12))
+                .create();
 
         DepartureEntity departureEntity = departureMapper.toDepartureEntity(service);
 
-        assertEquals(service.getAirportId(), departureEntity.getIdAirport());
-        assertEquals(service.getAirport().getCity(), departureEntity.getAirportEntity().getCity());
+        assertAll(
+                () -> assertEquals(service.getDepartureId(), departureEntity.getIdDeparture()),
+                () -> assertEquals(service.getAirportId(), departureEntity.getIdAirport()),
+                () -> assertEquals(service.getDepartureTime(), departureEntity.getDepartureTime()),
+                () -> org.assertj.core.api.Assertions.assertThat(departureEntity.getStatus()).isEqualTo(true)
+        );
     }
 
 }

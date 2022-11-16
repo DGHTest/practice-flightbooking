@@ -24,6 +24,7 @@ public interface DepartureMapper {
     Departure toDeparture(DepartureEntity departureEntity);
 
     List<Departure> toDepartures(List<DepartureEntity> departureEntities);
+
     @InheritInverseConfiguration
     @Mapping(target = "status", ignore = true)
     DepartureEntity toDepartureEntity(Departure departure);

@@ -50,12 +50,15 @@ public class PassengersTravelsEntityPk implements Serializable {
 
 
         public PassengersTravelsEntityPk create() {
-            validate();
             return new PassengersTravelsEntityPk(this);
         }
+    }
 
-        private void validate() {
-
-        }
+    @Override
+    public String toString() {
+        return "PassengersTravelsEntityPk{" +
+                "idPassenger=" + idPassenger +
+                ", idTravel=" + idTravel +
+                '}';
     }
 }

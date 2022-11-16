@@ -66,12 +66,7 @@ public class PassengersTravelsEntity {
         }
 
         public PassengersTravelsEntity create() {
-            validate();
             return new PassengersTravelsEntity(this);
-        }
-
-        private void validate() {
-
         }
     }
 }

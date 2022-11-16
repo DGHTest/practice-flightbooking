@@ -72,35 +72,35 @@ class AirportCrudRepositoryTest {
     @Test
     @DisplayName("Should return a airport by his state in the data.sql")
     public void findByState() {
-        AirportEntity airportEntityGeorgia = crudRepository.findByState("Georgia").get();
+        AirportEntity airportEntityGeorgia = crudRepository.findByState("Georgia").get().get(0);
 
         assertAll(
                 () -> assertEquals(1, airportEntityGeorgia.getIdAirport()),
                 () -> assertEquals("Georgia", airportEntityGeorgia.getState())
         );
 
-        AirportEntity airportEntityTexas = crudRepository.findByState("Texas").get();
+        AirportEntity airportEntityTexas = crudRepository.findByState("Texas").get().get(0);
 
         assertAll(
                 () -> assertEquals(2, airportEntityTexas.getIdAirport()),
                 () -> assertEquals("Texas", airportEntityTexas.getState())
         );
 
-        AirportEntity airportEntityNuevoLeon = crudRepository.findByState("Nuevo Leon").get();
+        AirportEntity airportEntityNuevoLeon = crudRepository.findByState("Nuevo Leon").get().get(0);
 
         assertAll(
                 () -> assertEquals(3, airportEntityNuevoLeon.getIdAirport()),
                 () -> assertEquals("Nuevo Leon", airportEntityNuevoLeon.getState())
         );
 
-        AirportEntity airportEntityCoahuila = crudRepository.findByState("Coahuila").get();
+        AirportEntity airportEntityCoahuila = crudRepository.findByState("Coahuila").get().get(0);
 
         assertAll(
                 () -> assertEquals(4, airportEntityCoahuila.getIdAirport()),
                 () -> assertEquals("Coahuila", airportEntityCoahuila.getState())
         );
 
-        AirportEntity airportEntityChubut = crudRepository.findByState("Chubut").get();
+        AirportEntity airportEntityChubut = crudRepository.findByState("Chubut").get().get(0);
 
         assertAll(
                 () -> assertEquals(5, airportEntityChubut.getIdAirport()),
@@ -111,35 +111,35 @@ class AirportCrudRepositoryTest {
     @Test
     @DisplayName("Should return a airport by his city in the data.sql")
     public void findByCity() {
-        AirportEntity airportEntityAtlanta = crudRepository.findByCity("Atlanta").get();
+        AirportEntity airportEntityAtlanta = crudRepository.findByCity("Atlanta").get().get(0);
 
         assertAll(
                 () -> assertEquals(1, airportEntityAtlanta.getIdAirport()),
                 () -> assertEquals("Atlanta", airportEntityAtlanta.getCity())
         );
 
-        AirportEntity airportEntityDallasFortWorth = crudRepository.findByCity("Dallas-Fort Worth").get();
+        AirportEntity airportEntityDallasFortWorth = crudRepository.findByCity("Dallas-Fort Worth").get().get(0);
 
         assertAll(
                 () -> assertEquals(2, airportEntityDallasFortWorth.getIdAirport()),
                 () -> assertEquals("Dallas-Fort Worth", airportEntityDallasFortWorth.getCity())
         );
 
-        AirportEntity airportEntityMonterrey = crudRepository.findByCity("Monterrey").get();
+        AirportEntity airportEntityMonterrey = crudRepository.findByCity("Monterrey").get().get(0);
 
         assertAll(
                 () -> assertEquals(3, airportEntityMonterrey.getIdAirport()),
                 () -> assertEquals("Monterrey", airportEntityMonterrey.getCity())
         );
 
-        AirportEntity airportEntityRamosArizpe = crudRepository.findByCity("Ramos Arizpe").get();
+        AirportEntity airportEntityRamosArizpe = crudRepository.findByCity("Ramos Arizpe").get().get(0);
 
         assertAll(
                 () -> assertEquals(4, airportEntityRamosArizpe.getIdAirport()),
                 () -> assertEquals("Ramos Arizpe", airportEntityRamosArizpe.getCity())
         );
 
-        AirportEntity airportEntityAltoRíoSenguer = crudRepository.findByCity("Alto Río Senguer").get();
+        AirportEntity airportEntityAltoRíoSenguer = crudRepository.findByCity("Alto Río Senguer").get().get(0);
 
         assertAll(
                 () -> assertEquals(5, airportEntityAltoRíoSenguer.getIdAirport()),

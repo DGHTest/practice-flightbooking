@@ -16,6 +16,9 @@ public class TicketEntity {
     @Column(name = "id_passenger", nullable = false)
     private Integer idPassenger;
 
+    @Column(name = "id_travel", nullable = false)
+    private Integer idTravel;
+
     @Column(name = "boarding_time", nullable = false)
     private LocalDateTime boardingTime;
 
@@ -23,12 +26,20 @@ public class TicketEntity {
     @JoinColumn(name = "id_passenger", insertable = false, updatable = false)
     private PassengerEntity passengerEntity;
 
+    @ManyToOne
+    @JoinColumn(name = "id_travel", insertable = false, updatable = false)
+    private TravelEntity travelEntity;
+
     public Integer getIdTicket() {
         return idTicket;
     }
 
     public Integer getIdPassenger() {
         return idPassenger;
+    }
+
+    public Integer getIdTravel() {
+        return idTravel;
     }
 
     public LocalDateTime getBoardingTime() {
@@ -39,13 +50,19 @@ public class TicketEntity {
         return passengerEntity;
     }
 
+    public TravelEntity getTravelEntity() {
+        return travelEntity;
+    }
+
     protected TicketEntity() {}
 
     private TicketEntity(TicketEntity.Builder builder) {
         this.idTicket = builder.idTicket;
         this.idPassenger = builder.idPassenger;
+        this.idTravel = builder.idTravel;
         this.boardingTime = builder.boardingTime;
         this.passengerEntity = builder.passengerEntity;
+        this.travelEntity = builder.travelEntity;
     }
 
     public static TicketEntity.Builder builder() {
@@ -58,9 +75,13 @@ public class TicketEntity {
 
         private Integer idPassenger;
 
+        private Integer idTravel;
+
         private LocalDateTime boardingTime;
 
         private PassengerEntity passengerEntity;
+
+        private TravelEntity travelEntity;
 
         public Builder setIdTicket(final Integer idTicket){
             this.idTicket = idTicket;
@@ -69,6 +90,11 @@ public class TicketEntity {
 
         public Builder setIdPassenger(final Integer idPassenger){
             this.idPassenger = idPassenger;
+            return this;
+        }
+
+        public Builder setIdTravel(final Integer idTravel){
+            this.idTravel = idTravel;
             return this;
         }
 
@@ -82,13 +108,13 @@ public class TicketEntity {
             return this;
         }
 
-        public TicketEntity create() {
-            validate();
-            return new TicketEntity(this);
+        public Builder setTravelEntity(final TravelEntity travelEntity){
+            this.travelEntity = travelEntity;
+            return this;
         }
 
-        private void validate() {
-
+        public TicketEntity create() {
+            return new TicketEntity(this);
         }
     }
 
@@ -97,6 +123,7 @@ public class TicketEntity {
         return "TicketEntity{" +
                 "idTicket=" + idTicket +
                 ", idPassenger=" + idPassenger +
+                ", idTravel=" + idTravel +
                 ", boardingTime=" + boardingTime +
                 '}';
     }

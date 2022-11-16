@@ -114,26 +114,8 @@ public class ArrivalFlightEntity {
         }
 
         public ArrivalFlightEntity create() {
-            validate();
             return new ArrivalFlightEntity(this);
         }
-
-        private void validate() {
-
-        }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ArrivalFlightEntity that = (ArrivalFlightEntity) o;
-        return idArrivalFlight.equals(that.idArrivalFlight);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(idArrivalFlight);
     }
 
     @Override

@@ -3,13 +3,40 @@ package com.practice.flightbooking.domain.service;
 
 public class PassengersTravel {
 
-    private int travelsPassengerId;
+    private int travelId;
 
-    public int getTravelsPassengerId() {
-        return travelsPassengerId;
+    public int getTravelId() {
+        return travelId;
     }
 
-    public void setTravelsPassengerId(int travelsPassengerId) {
-        this.travelsPassengerId = travelsPassengerId;
+    protected PassengersTravel() {}
+
+    private PassengersTravel(PassengersTravel.Builder builder) {
+        this.travelId = builder.travelId;
+    }
+
+    public static PassengersTravel.Builder builder() {
+        return new PassengersTravel.Builder();
+    }
+
+    public static class Builder {
+
+        private int travelId;
+
+        public Builder setTravelId(final int travelId){
+            this.travelId = travelId;
+            return this;
+        }
+
+        public PassengersTravel create() {
+            return new PassengersTravel(this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "PassengersTravel{" +
+                "travelsPassengerId=" + travelId +
+                '}';
     }
 }
