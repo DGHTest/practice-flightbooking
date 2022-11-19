@@ -1,5 +1,6 @@
 package com.practice.flightbooking.crud;
 
+import com.practice.flightbooking.domain.Departure;
 import com.practice.flightbooking.persistence.crud.DepartureCrudRepository;
 import com.practice.flightbooking.persistence.entity.ArrivalFlightEntity;
 import com.practice.flightbooking.persistence.entity.DepartureEntity;
@@ -101,8 +102,8 @@ class DepartureCrudRepositoryTest {
         assertAll(
                 () -> assertThat(departureEntities.size()).isEqualTo(4),
                 () -> assertTrue(departureEntities.contains(departure)),
-                () -> assertEquals(Arrays.asList(1, 2, 3, 4), departureEntities.stream().map(travel -> travel.getIdDeparture()).collect(Collectors.toList())),
-                () -> assertEquals(Arrays.asList(1, 2, 5, 3), departureEntities.stream().map(travel -> travel.getIdAirport()).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(1, 2, 3, 4), departureEntities.stream().map(DepartureEntity::getIdDeparture).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(1, 2, 5, 3), departureEntities.stream().map(DepartureEntity::getIdAirport).collect(Collectors.toList())),
                 () -> assertThat(departureEntities).filteredOn(
                         departures -> departures.getStatus().equals(true)
                 )
@@ -124,6 +125,27 @@ class DepartureCrudRepositoryTest {
         List<DepartureEntity> departureWithoutAirport = crudRepository.findByIdAirportAndStatus(8, true).get();
 
         assertTrue(departureWithoutAirport.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Should return all departure in the database with one date after the specified and his status = true")
+    public void findByDepartureTimeAfterAndStatus() {
+        List<DepartureEntity> departureByArrivalTime = crudRepository.findByDepartureTimeAfterAndStatus(LocalDateTime.now(), true).get();
+
+        List<DepartureEntity> departureByBeforeArrivalTime = crudRepository.findByDepartureTimeAfterAndStatus(LocalDateTime.of(2000, Month.APRIL, 01, 01, 00, 00), true).get();
+
+        assertAll(
+                () -> assertThat(departureByArrivalTime.size()).isEqualTo(1),
+                () -> assertThat(departureByBeforeArrivalTime.size()).isEqualTo(4),
+                () -> assertTrue(departureByArrivalTime.contains(departure)),
+                () -> assertEquals(Arrays.asList(4), departureByArrivalTime.stream().map(DepartureEntity::getIdDeparture).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(3), departureByArrivalTime.stream().map(DepartureEntity::getIdAirport).collect(Collectors.toList())),
+                () -> assertTrue(departureByArrivalTime.stream().map(DepartureEntity::getDepartureTime)
+                        .allMatch(time -> time.isAfter(LocalDateTime.now()))),
+                () -> assertThat(departureByArrivalTime).filteredOn(
+                        arrivalFlight -> arrivalFlight.getStatus().equals(true)
+                )
+        );
     }
 
     @Test
@@ -158,8 +180,8 @@ class DepartureCrudRepositoryTest {
 
         assertAll(
                 () -> Assertions.assertThat(newAllDepartures.size()).isEqualTo(1),
-                () -> assertEquals(Arrays.asList(4), newAllDepartures.stream().map(travel -> travel.getIdDeparture()).collect(Collectors.toList())),
-                () -> assertEquals(Arrays.asList(3), newAllDepartures.stream().map(travel -> travel.getIdAirport()).collect(Collectors.toList()))
+                () -> assertEquals(Arrays.asList(4), newAllDepartures.stream().map(DepartureEntity::getIdDeparture).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(3), newAllDepartures.stream().map(DepartureEntity::getIdAirport).collect(Collectors.toList()))
         );
     }
 }

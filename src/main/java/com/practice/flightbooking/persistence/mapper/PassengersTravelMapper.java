@@ -1,12 +1,11 @@
 package com.practice.flightbooking.persistence.mapper;
 
-import com.practice.flightbooking.domain.service.PassengersTravel;
+import com.practice.flightbooking.domain.PassengersTravel;
 import com.practice.flightbooking.persistence.entity.PassengersTravelsEntity;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 

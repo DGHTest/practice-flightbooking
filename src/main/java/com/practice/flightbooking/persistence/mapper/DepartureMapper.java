@@ -1,6 +1,6 @@
 package com.practice.flightbooking.persistence.mapper;
 
-import com.practice.flightbooking.domain.service.Departure;
+import com.practice.flightbooking.domain.Departure;
 import com.practice.flightbooking.persistence.entity.DepartureEntity;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;

@@ -1,6 +1,6 @@
 package com.practice.flightbooking.mappers;
 
-import com.practice.flightbooking.domain.service.Travel;
+import com.practice.flightbooking.domain.Travel;
 import com.practice.flightbooking.persistence.entity.TravelEntity;
 import com.practice.flightbooking.persistence.mapper.TravelMapper;
 import org.junit.jupiter.api.DisplayName;

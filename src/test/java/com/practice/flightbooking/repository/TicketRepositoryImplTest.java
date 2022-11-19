@@ -1,7 +1,7 @@
 package com.practice.flightbooking.repository;
 
 import com.practice.flightbooking.domain.repository.TicketRepository;
-import com.practice.flightbooking.domain.service.Ticket;
+import com.practice.flightbooking.domain.Ticket;
 import com.practice.flightbooking.persistence.crud.TicketCrudRepository;
 import com.practice.flightbooking.persistence.entity.TicketEntity;
 import com.practice.flightbooking.persistence.mapper.TicketMapper;
@@ -63,6 +63,28 @@ class TicketRepositoryImplTest {
                 .create();
 
         optionalTickets = Optional.of(Arrays.asList(ticketEntity1, ticketEntity2, ticketEntity3));
+    }
+
+    @Test
+    @DisplayName("Should return one ticketEntity with his specific id and then the mapper should transform to ticket or throw an error if the id is not found")
+    void getTicketById() throws Exception {
+        Mockito.when(ticketCrudRepository.findById(3))
+                .thenReturn(Optional.of((optionalTickets.get().get(2))));
+
+        Ticket ticketsById = ticketRepository.getTicketById(3);
+
+        Exception exception1 = assertThrows(Exception.class, () -> ticketRepository.getTicketById(10));
+        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
+
+        String expectedMessage = "Ticket by id not found";
+
+        assertAll(
+                () -> assertEquals(expectedMessage, exception1.getMessage()),
+                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
+                () -> assertEquals(3, ticketsById.getTicketId()),
+                () -> assertEquals(8, ticketsById.getPassengerId()),
+                () -> assertEquals(90, ticketsById.getTravelId())
+        );
     }
 
     @Test

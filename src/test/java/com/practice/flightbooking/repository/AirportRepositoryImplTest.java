@@ -1,7 +1,7 @@
 package com.practice.flightbooking.repository;
 
 import com.practice.flightbooking.domain.repository.AirportRepository;
-import com.practice.flightbooking.domain.service.Airport;
+import com.practice.flightbooking.domain.Airport;
 import com.practice.flightbooking.persistence.crud.AirportCrudRepository;
 import com.practice.flightbooking.persistence.entity.AirportEntity;
 import com.practice.flightbooking.persistence.mapper.AirportMapper;

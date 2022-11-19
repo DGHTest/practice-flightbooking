@@ -1,6 +1,6 @@
 package com.practice.flightbooking.mappers;
 
-import com.practice.flightbooking.domain.service.Passenger;
+import com.practice.flightbooking.domain.Passenger;
 import com.practice.flightbooking.persistence.entity.PassengerEntity;
 import com.practice.flightbooking.persistence.mapper.PassengerMapper;
 import org.assertj.core.api.Assertions;

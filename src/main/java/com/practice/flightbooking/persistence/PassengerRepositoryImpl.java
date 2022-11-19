@@ -1,7 +1,7 @@
 package com.practice.flightbooking.persistence;
 
 import com.practice.flightbooking.domain.repository.PassengerRepository;
-import com.practice.flightbooking.domain.service.Passenger;
+import com.practice.flightbooking.domain.Passenger;
 import com.practice.flightbooking.persistence.crud.PassengerCrudRepository;
 import com.practice.flightbooking.persistence.entity.PassengerEntity;
 import com.practice.flightbooking.persistence.mapper.PassengerMapper;

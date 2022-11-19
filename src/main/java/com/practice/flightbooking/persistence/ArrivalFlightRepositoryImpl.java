@@ -1,13 +1,14 @@
 package com.practice.flightbooking.persistence;
 
 import com.practice.flightbooking.domain.repository.ArrivalFlightRepository;
-import com.practice.flightbooking.domain.service.ArrivalFlight;
+import com.practice.flightbooking.domain.ArrivalFlight;
 import com.practice.flightbooking.persistence.crud.ArrivalCrudRepository;
 import com.practice.flightbooking.persistence.entity.ArrivalFlightEntity;
 import com.practice.flightbooking.persistence.mapper.ArrivalFlightMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,17 @@ public class ArrivalFlightRepositoryImpl implements ArrivalFlightRepository {
             return arrivalFlightMapper.toArrivalFlights(arrivalFlightByIdAirport.get());
         } else {
             throw new Exception("Airport id not found");
+        }
+    }
+
+    @Override
+    public List<ArrivalFlight> getByArrivalTime(LocalDateTime arrivalTime) throws Exception {
+        Optional<List<ArrivalFlightEntity>> arrivalFlightByArrivalTime = arrivalCrudRepository.findByArrivalTimeAfterAndStatus(arrivalTime, true);
+
+        if (arrivalFlightByArrivalTime.isPresent()) {
+            return arrivalFlightMapper.toArrivalFlights(arrivalFlightByArrivalTime.get());
+        } else {
+            throw new Exception("There are no arrival flights after the given arrival time");
         }
     }
 

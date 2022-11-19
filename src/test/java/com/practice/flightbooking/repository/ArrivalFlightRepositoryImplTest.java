@@ -1,7 +1,7 @@
 package com.practice.flightbooking.repository;
 
 import com.practice.flightbooking.domain.repository.ArrivalFlightRepository;
-import com.practice.flightbooking.domain.service.ArrivalFlight;
+import com.practice.flightbooking.domain.ArrivalFlight;
 import com.practice.flightbooking.persistence.crud.ArrivalCrudRepository;
 import com.practice.flightbooking.persistence.entity.ArrivalFlightEntity;
 import com.practice.flightbooking.persistence.mapper.ArrivalFlightMapper;
@@ -76,8 +76,8 @@ class ArrivalFlightRepositoryImplTest {
 
         assertAll(
                 () -> Assertions.assertThat(allArrivalFlights.size()).isEqualTo(3),
-                () -> assertEquals(Arrays.asList(1, 2, 3), allArrivalFlights.stream().map(travel -> travel.getArrivalFlightId()).collect(Collectors.toList())),
-                () -> assertEquals(Arrays.asList(3, 3, 4), allArrivalFlights.stream().map(travel -> travel.getAirportId()).collect(Collectors.toList()))
+                () -> assertEquals(Arrays.asList(1, 2, 3), allArrivalFlights.stream().map(ArrivalFlight::getArrivalFlightId).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(3, 3, 4), allArrivalFlights.stream().map(ArrivalFlight::getAirportId).collect(Collectors.toList()))
         );
     }
 
@@ -118,8 +118,39 @@ class ArrivalFlightRepositoryImplTest {
                 () -> assertEquals(expectedMessage, exception1.getMessage()),
                 () -> assertNotEquals(expectedMessage, exception2.getMessage()),
                 () -> assertThat(airportById.size()).isEqualTo(2),
-                () -> assertEquals(Arrays.asList(1, 2), airportById.stream().map(arrival -> arrival.getArrivalFlightId()).collect(Collectors.toList())),
-                () -> assertEquals(Arrays.asList(3, 3), airportById.stream().map(arrival -> arrival.getAirportId()).collect(Collectors.toList()))
+                () -> assertEquals(Arrays.asList(1, 2), airportById.stream().map(ArrivalFlight::getArrivalFlightId).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(3, 3), airportById.stream().map(ArrivalFlight::getAirportId).collect(Collectors.toList()))
+        );
+    }
+
+    @Test
+    @DisplayName("Should return all arrivalFlightEntities with one date after the specified and value true, and the mapper should transform to arrivalFlights or throw an error if there are no arrival flights")
+    void getByArrivalTime() throws Exception {
+        ArrivalFlightEntity arrivalFlightEntity = ArrivalFlightEntity.builder()
+                .setIdArrivalFlight(4)
+                .setIdAirport(32)
+                .setArrivalTime(LocalDateTime.of(2023, Month.NOVEMBER, 9, 16, 30, 00))
+                .setStatus(true)
+                .create();
+
+        Mockito.when(arrivalCrudRepository.findByArrivalTimeAfterAndStatus(LocalDateTime.of(2000, Month.APRIL, 01, 01, 00, 00), true))
+                .thenReturn(Optional.of(Arrays.asList(arrivalFlightEntity)));
+
+        List<ArrivalFlight> airportByArrivalTime = arrivalFlightRepository.getByArrivalTime(LocalDateTime.of(2000, Month.APRIL, 01, 01, 00, 00));
+
+        Exception exception1 = assertThrows(Exception.class, () -> arrivalFlightRepository.getByArrivalTime(LocalDateTime.of(2024, Month.NOVEMBER, 9, 16, 30, 00)));
+        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
+
+        String expectedMessage = "There are no arrival flights after the given arrival time";
+
+        assertAll(
+                () -> assertEquals(expectedMessage, exception1.getMessage()),
+                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
+                () -> assertThat(airportByArrivalTime.size()).isEqualTo(1),
+                () -> assertEquals(Arrays.asList(4), airportByArrivalTime.stream().map(ArrivalFlight::getArrivalFlightId).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(32), airportByArrivalTime.stream().map(ArrivalFlight::getAirportId).collect(Collectors.toList())),
+                () -> assertTrue(airportByArrivalTime.stream().map(ArrivalFlight::getArrivalTime)
+                        .allMatch(time -> time.isAfter(LocalDateTime.now())))
         );
     }
 

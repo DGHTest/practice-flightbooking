@@ -1,8 +1,10 @@
 package com.practice.flightbooking.repository;
 
+import com.practice.flightbooking.domain.ArrivalFlight;
 import com.practice.flightbooking.domain.repository.DepartureRepository;
-import com.practice.flightbooking.domain.service.Departure;
+import com.practice.flightbooking.domain.Departure;
 import com.practice.flightbooking.persistence.crud.DepartureCrudRepository;
+import com.practice.flightbooking.persistence.entity.ArrivalFlightEntity;
 import com.practice.flightbooking.persistence.entity.DepartureEntity;
 import com.practice.flightbooking.persistence.mapper.DepartureMapper;
 import org.assertj.core.api.Assertions;
@@ -76,8 +78,8 @@ class DepartureRepositoryImplTest {
 
         assertAll(
                 () -> Assertions.assertThat(allDepartures.size()).isEqualTo(3),
-                () -> assertEquals(Arrays.asList(1, 2, 3), allDepartures.stream().map(travel -> travel.getDepartureId()).collect(Collectors.toList())),
-                () -> assertEquals(Arrays.asList(3, 3, 4), allDepartures.stream().map(travel -> travel.getAirportId()).collect(Collectors.toList()))
+                () -> assertEquals(Arrays.asList(1, 2, 3), allDepartures.stream().map(Departure::getDepartureId).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(3, 3, 4), allDepartures.stream().map(Departure::getAirportId).collect(Collectors.toList()))
         );
     }
 
@@ -118,8 +120,39 @@ class DepartureRepositoryImplTest {
                 () -> assertEquals(expectedMessage, exception1.getMessage()),
                 () -> assertNotEquals(expectedMessage, exception2.getMessage()),
                 () -> assertThat(departureById.size()).isEqualTo(2),
-                () -> assertEquals(Arrays.asList(1, 2), departureById.stream().map(arrival -> arrival.getDepartureId()).collect(Collectors.toList())),
-                () -> assertEquals(Arrays.asList(3, 3), departureById.stream().map(arrival -> arrival.getAirportId()).collect(Collectors.toList()))
+                () -> assertEquals(Arrays.asList(1, 2), departureById.stream().map(Departure::getDepartureId).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(3, 3), departureById.stream().map(Departure::getAirportId).collect(Collectors.toList()))
+        );
+    }
+
+    @Test
+    @DisplayName("Should return all departureEntities with one date after the specified and value true, and the mapper should transform to departures or throw an error if there are no departures")
+    void getByDepartureTime() throws Exception {
+        DepartureEntity departureEntity = DepartureEntity.builder()
+                .setIdDeparture(4)
+                .setIdAirport(32)
+                .setDepartureTime(LocalDateTime.of(2023, Month.NOVEMBER, 9, 16, 30, 00))
+                .setStatus(true)
+                .create();
+
+        Mockito.when(departureCrudRepository.findByDepartureTimeAfterAndStatus(LocalDateTime.of(2000, Month.APRIL, 01, 01, 00, 00), true))
+                .thenReturn(Optional.of(Arrays.asList(departureEntity)));
+
+        List<Departure> departureByDepartureTime = departureRepository.getByDepartureTime(LocalDateTime.of(2000, Month.APRIL, 01, 01, 00, 00));
+
+        Exception exception1 = assertThrows(Exception.class, () -> departureRepository.getByDepartureTime(LocalDateTime.of(2024, Month.NOVEMBER, 9, 16, 30, 00)));
+        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
+
+        String expectedMessage = "There are no departures after the given departure time";
+
+        assertAll(
+                () -> assertEquals(expectedMessage, exception1.getMessage()),
+                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
+                () -> assertThat(departureByDepartureTime.size()).isEqualTo(1),
+                () -> assertEquals(Arrays.asList(4), departureByDepartureTime.stream().map(Departure::getDepartureId).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(32), departureByDepartureTime.stream().map(Departure::getAirportId).collect(Collectors.toList())),
+                () -> assertTrue(departureByDepartureTime.stream().map(Departure::getDepartureTime)
+                        .allMatch(time -> time.isAfter(LocalDateTime.now())))
         );
     }
 

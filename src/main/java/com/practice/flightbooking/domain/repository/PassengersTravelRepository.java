@@ -1,6 +1,6 @@
 package com.practice.flightbooking.domain.repository;
 
-import com.practice.flightbooking.domain.service.PassengersTravel;
+import com.practice.flightbooking.domain.PassengersTravel;
 
 import java.util.List;
 

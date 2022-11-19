@@ -1,13 +1,15 @@
 package com.practice.flightbooking.persistence;
 
 import com.practice.flightbooking.domain.repository.DepartureRepository;
-import com.practice.flightbooking.domain.service.Departure;
+import com.practice.flightbooking.domain.Departure;
 import com.practice.flightbooking.persistence.crud.DepartureCrudRepository;
+import com.practice.flightbooking.persistence.entity.ArrivalFlightEntity;
 import com.practice.flightbooking.persistence.entity.DepartureEntity;
 import com.practice.flightbooking.persistence.mapper.DepartureMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +47,17 @@ public class DepartureRepositoryImpl implements DepartureRepository {
             return departureMapper.toDepartures(departureByIdAirport.get());
         } else {
             throw new Exception("Airport id not found");
+        }
+    }
+
+    @Override
+    public List<Departure> getByDepartureTime(LocalDateTime departureTime) throws Exception {
+        Optional<List<DepartureEntity>> departureByArrivalTime = departureCrudRepository.findByDepartureTimeAfterAndStatus(departureTime, true);
+
+        if (departureByArrivalTime.isPresent()) {
+            return departureMapper.toDepartures(departureByArrivalTime.get());
+        } else {
+            throw new Exception("There are no departures after the given departure time");
         }
     }
 

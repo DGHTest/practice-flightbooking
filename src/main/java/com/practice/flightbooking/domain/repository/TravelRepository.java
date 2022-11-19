@@ -1,6 +1,6 @@
 package com.practice.flightbooking.domain.repository;
 
-import com.practice.flightbooking.domain.service.Travel;
+import com.practice.flightbooking.domain.Travel;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public interface TravelRepository {
 
     Travel getTravelById(int travelId) throws Exception;
 
-    List<Travel> getByIdArrivalFlight(int airportId) throws Exception;
+    List<Travel> getByIdArrivalFlight(int arrivalId) throws Exception;
 
     List<Travel> getByIdDeparture(int departureId) throws Exception;
 

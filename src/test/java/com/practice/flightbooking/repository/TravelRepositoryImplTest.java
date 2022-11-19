@@ -1,7 +1,7 @@
 package com.practice.flightbooking.repository;
 
 import com.practice.flightbooking.domain.repository.TravelRepository;
-import com.practice.flightbooking.domain.service.Travel;
+import com.practice.flightbooking.domain.Travel;
 import com.practice.flightbooking.persistence.crud.TravelCrudRepository;
 import com.practice.flightbooking.persistence.entity.TravelEntity;
 import com.practice.flightbooking.persistence.mapper.TravelMapper;
@@ -103,7 +103,6 @@ class TravelRepositoryImplTest {
                 () -> assertNotEquals(expectedMessage, exception2.getMessage()),
                 () -> assertEquals(2, travelById.getTravelId())
         );
-
     }
 
     @Test

@@ -1,7 +1,7 @@
 package com.practice.flightbooking.persistence;
 
 import com.practice.flightbooking.domain.repository.TicketRepository;
-import com.practice.flightbooking.domain.service.Ticket;
+import com.practice.flightbooking.domain.Ticket;
 import com.practice.flightbooking.persistence.crud.TicketCrudRepository;
 import com.practice.flightbooking.persistence.entity.TicketEntity;
 import com.practice.flightbooking.persistence.mapper.TicketMapper;
@@ -19,6 +19,17 @@ public class TicketRepositoryImpl implements TicketRepository {
 
     @Autowired
     private TicketMapper ticketMapper;
+
+    @Override
+    public Ticket getTicketById(int ticketId) throws Exception {
+        Optional<TicketEntity> ticketById = ticketCrudRepository.findById(ticketId);
+
+        if (ticketById.isPresent()) {
+            return ticketMapper.toTicket(ticketById.get());
+        } else {
+            throw new Exception("Ticket by id not found");
+        }
+    }
 
     @Override
     public List<Ticket> getByIdPassenger(int passengerId) throws Exception {

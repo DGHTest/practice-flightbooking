@@ -1,6 +1,6 @@
 package com.practice.flightbooking.mappers;
 
-import com.practice.flightbooking.domain.service.PassengersTravel;
+import com.practice.flightbooking.domain.PassengersTravel;
 import com.practice.flightbooking.persistence.entity.PassengersTravelsEntity;
 import com.practice.flightbooking.persistence.entity.PassengersTravelsEntityPk;
 import com.practice.flightbooking.persistence.mapper.PassengersTravelMapper;

@@ -2,7 +2,7 @@ package com.practice.flightbooking.persistence;
 
 
 import com.practice.flightbooking.domain.repository.TravelRepository;
-import com.practice.flightbooking.domain.service.Travel;
+import com.practice.flightbooking.domain.Travel;
 import com.practice.flightbooking.persistence.crud.TravelCrudRepository;
 import com.practice.flightbooking.persistence.entity.TravelEntity;
 import com.practice.flightbooking.persistence.mapper.TravelMapper;
@@ -39,8 +39,8 @@ public class TravelRepositoryImpl implements TravelRepository {
     }
 
     @Override
-    public List<Travel> getByIdArrivalFlight(int airportId) throws Exception {
-        Optional<List<TravelEntity>> travelsByArrival = travelCrudRepository.findByIdArrivalFlightAndStatus(airportId, true);
+    public List<Travel> getByIdArrivalFlight(int arrivalId) throws Exception {
+        Optional<List<TravelEntity>> travelsByArrival = travelCrudRepository.findByIdArrivalFlightAndStatus(arrivalId, true);
 
         if (travelsByArrival.isPresent()) {
             return travelMapper.toTravels(travelsByArrival.get());

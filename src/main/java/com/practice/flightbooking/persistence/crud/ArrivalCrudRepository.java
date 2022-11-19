@@ -12,9 +12,11 @@ import java.util.Optional;
 
 public interface ArrivalCrudRepository extends BasicCrudRepository<ArrivalFlightEntity, Integer> {
 
+    List<ArrivalFlightEntity> findByStatus(boolean status);
+
     Optional<List<ArrivalFlightEntity>> findByIdAirportAndStatus(int idAirport, boolean status);
 
-    List<ArrivalFlightEntity> findByStatus(boolean status);
+    Optional<List<ArrivalFlightEntity>> findByArrivalTimeAfterAndStatus(LocalDateTime arrivalTime, boolean status);
 
     @Modifying
     @Query("UPDATE ArrivalFlightEntity af SET af.status = false WHERE af.idArrivalFlight = :id")

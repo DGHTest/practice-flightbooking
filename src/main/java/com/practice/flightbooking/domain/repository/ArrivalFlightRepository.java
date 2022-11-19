@@ -1,9 +1,9 @@
 package com.practice.flightbooking.domain.repository;
 
-import com.practice.flightbooking.domain.service.ArrivalFlight;
+import com.practice.flightbooking.domain.ArrivalFlight;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 
 public interface ArrivalFlightRepository {
@@ -13,6 +13,8 @@ public interface ArrivalFlightRepository {
     ArrivalFlight getArrivalById(int arrivalId) throws Exception;
 
     List<ArrivalFlight> getByIdAirport(int airportId) throws Exception;
+
+    List<ArrivalFlight> getByArrivalTime(LocalDateTime arrivalTime) throws Exception;
 
     ArrivalFlight saveArrival(ArrivalFlight arrivalFlight) throws Exception;
 }

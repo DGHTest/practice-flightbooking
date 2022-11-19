@@ -1,4 +1,4 @@
-package com.practice.flightbooking.domain.service;
+package com.practice.flightbooking.domain;
 
 public class Airport {
 

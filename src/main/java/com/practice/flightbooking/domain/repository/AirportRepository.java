@@ -1,7 +1,6 @@
 package com.practice.flightbooking.domain.repository;
 
-import com.practice.flightbooking.domain.service.Airport;
-import com.practice.flightbooking.persistence.entity.AirportEntity;
+import com.practice.flightbooking.domain.Airport;
 
 import java.util.List;
 

@@ -1,13 +1,12 @@
 package com.practice.flightbooking.repository;
 
 import com.practice.flightbooking.domain.repository.PassengersTravelRepository;
-import com.practice.flightbooking.domain.service.PassengersTravel;
+import com.practice.flightbooking.domain.PassengersTravel;
 import com.practice.flightbooking.persistence.crud.PassengersTravelsCrudRepository;
 import com.practice.flightbooking.persistence.entity.PassengersTravelsEntity;
 import com.practice.flightbooking.persistence.entity.PassengersTravelsEntityPk;
 import com.practice.flightbooking.persistence.mapper.PassengersTravelMapper;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;

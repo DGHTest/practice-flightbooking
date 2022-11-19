@@ -1,7 +1,7 @@
 package com.practice.flightbooking.repository;
 
 import com.practice.flightbooking.domain.repository.PassengerRepository;
-import com.practice.flightbooking.domain.service.Passenger;
+import com.practice.flightbooking.domain.Passenger;
 import com.practice.flightbooking.persistence.crud.PassengerCrudRepository;
 import com.practice.flightbooking.persistence.entity.PassengerEntity;
 import com.practice.flightbooking.persistence.mapper.PassengerMapper;
@@ -116,7 +116,7 @@ class PassengerRepositoryImplTest {
         Mockito.when(passengerCrudRepository.findByEmail("joseramirez1@random.names"))
                 .thenReturn(Optional.of(optionalPassengers.get().get(0)));
 
-        Passenger passengerById = passengerRepository.getPassengerByEmail("joseramirez1@random.names");
+        Passenger passengerByEmail = passengerRepository.getPassengerByEmail("joseramirez1@random.names");
 
         Exception exception1 = assertThrows(Exception.class, () -> passengerRepository.getPassengerByEmail("@random.names"));
         Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
@@ -126,8 +126,8 @@ class PassengerRepositoryImplTest {
         assertAll(
                 () -> assertEquals(expectedMessage, exception1.getMessage()),
                 () -> assertNotEquals(expectedMessage, exception2.getMessage()),
-                () -> assertEquals(1, passengerById.getPassengerId()),
-                () -> assertEquals("joseramirez1@random.names", passengerById.getEmail())
+                () -> assertEquals(1, passengerByEmail.getPassengerId()),
+                () -> assertEquals("joseramirez1@random.names", passengerByEmail.getEmail())
         );
     }
 
@@ -198,7 +198,7 @@ class PassengerRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Should return one passengerEntity with the specific id and the mapper should transform to passenger or throw an error if the id is not found")
+    @DisplayName("Should delete one passengerEntity with the specific id or throw an error if the id is not found")
     void deletePassenger() throws Exception {
         PassengerRepository passengerRepositoryMock = Mockito.mock(PassengerRepository.class);
         Mockito.doNothing().when(passengerRepositoryMock).deletePassenger(Mockito.isA(Integer.class));

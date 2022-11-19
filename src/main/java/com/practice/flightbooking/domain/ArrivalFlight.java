@@ -1,8 +1,4 @@
-package com.practice.flightbooking.domain.service;
-
-import com.practice.flightbooking.persistence.entity.AirportEntity;
-import com.practice.flightbooking.persistence.entity.ArrivalFlightEntity;
-import com.practice.flightbooking.persistence.entity.TravelEntity;
+package com.practice.flightbooking.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;

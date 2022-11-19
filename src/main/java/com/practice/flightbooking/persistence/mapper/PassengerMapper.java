@@ -1,14 +1,14 @@
 package com.practice.flightbooking.persistence.mapper;
 
-import com.practice.flightbooking.domain.service.Passenger;
+import com.practice.flightbooking.domain.Passenger;
 import com.practice.flightbooking.persistence.entity.PassengerEntity;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring", uses = {PassengersTravelMapper.class})
+@Mapper(componentModel = "spring")
 public interface PassengerMapper {
 
-    PassengerMapper passengerMapper = Mappers.getMapper(PassengerMapper.class);
+    //PassengerMapper passengerMapper = Mappers.getMapper(PassengerMapper.class);
 
     @Mappings({
             @Mapping(source = "idPassenger", target = "passengerId"),

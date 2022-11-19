@@ -1,6 +1,6 @@
 package com.practice.flightbooking.domain.repository;
 
-import com.practice.flightbooking.domain.service.Passenger;
+import com.practice.flightbooking.domain.Passenger;
 
 public interface PassengerRepository {
 
