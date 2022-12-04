@@ -84,41 +84,25 @@ class DepartureRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Should return one departureEntity with the specific id and the mapper should transform to departure or throw an error if the id is not found")
+    @DisplayName("Should return one departureEntity with the specific id and the mapper should transform to departure")
     void getDepartureById() throws Exception {
         Mockito.when(departureCrudRepository.findById(3))
                 .thenReturn(Optional.of(optionalDepartures.get().get(2)));
 
-        Departure departureById = departureRepository.getDepartureById(3);
+        Departure departureById = departureRepository.getDepartureById(3).get();
 
-        Exception exception1 = assertThrows(Exception.class, () -> departureRepository.getDepartureById(6));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Departure by id not found";
-
-        assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
-                () -> assertEquals(3, departureById.getDepartureId())
-        );
+        assertEquals(3, departureById.getDepartureId());
     }
 
     @Test
-    @DisplayName("Should return all departureEntities with the specific idAirport and value true, and the mapper should transform to departures or throw an error if the idAirport is not found")
+    @DisplayName("Should return all departureEntities with the specific idAirport and value true, and the mapper should transform to departures")
     void getByIdAirport() throws Exception {
         Mockito.when(departureCrudRepository.findByIdAirportAndStatus(3, true))
                 .thenReturn(Optional.of(Arrays.asList(optionalDepartures.get().get(0), optionalDepartures.get().get(1))));
 
-        List<Departure> departureById = departureRepository.getByIdAirport(3);
-
-        Exception exception1 = assertThrows(Exception.class, () -> departureRepository.getByIdAirport(6));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Airport id not found";
+        List<Departure> departureById = departureRepository.getByIdAirport(3).get();
 
         assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
                 () -> assertThat(departureById.size()).isEqualTo(2),
                 () -> assertEquals(Arrays.asList(1, 2), departureById.stream().map(Departure::getDepartureId).collect(Collectors.toList())),
                 () -> assertEquals(Arrays.asList(3, 3), departureById.stream().map(Departure::getAirportId).collect(Collectors.toList()))
@@ -126,7 +110,7 @@ class DepartureRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Should return all departureEntities with one date after the specified and value true, and the mapper should transform to departures or throw an error if there are no departures")
+    @DisplayName("Should return all departureEntities with one date after the specified and value true, and the mapper should transform to departures")
     void getByDepartureTime() throws Exception {
         DepartureEntity departureEntity = DepartureEntity.builder()
                 .setIdDeparture(4)
@@ -138,16 +122,9 @@ class DepartureRepositoryImplTest {
         Mockito.when(departureCrudRepository.findByDepartureTimeAfterAndStatus(LocalDateTime.of(2000, Month.APRIL, 01, 01, 00, 00), true))
                 .thenReturn(Optional.of(Arrays.asList(departureEntity)));
 
-        List<Departure> departureByDepartureTime = departureRepository.getByDepartureTime(LocalDateTime.of(2000, Month.APRIL, 01, 01, 00, 00));
-
-        Exception exception1 = assertThrows(Exception.class, () -> departureRepository.getByDepartureTime(LocalDateTime.of(2024, Month.NOVEMBER, 9, 16, 30, 00)));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "There are no departures after the given departure time";
+        List<Departure> departureByDepartureTime = departureRepository.getByDepartureTime(LocalDateTime.of(2000, Month.APRIL, 01, 01, 00, 00)).get();
 
         assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
                 () -> assertThat(departureByDepartureTime.size()).isEqualTo(1),
                 () -> assertEquals(Arrays.asList(4), departureByDepartureTime.stream().map(Departure::getDepartureId).collect(Collectors.toList())),
                 () -> assertEquals(Arrays.asList(32), departureByDepartureTime.stream().map(Departure::getAirportId).collect(Collectors.toList())),
@@ -157,7 +134,7 @@ class DepartureRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Should save one departureEntity and return it with the mapper to departure or throw an error if the id already exist")
+    @DisplayName("Should save one departureEntity and return it with the mapper to departure")
     void saveDeparture() throws Exception {
         DepartureEntity departureEntity = DepartureEntity.builder()
                 .setIdDeparture(32)
@@ -170,12 +147,7 @@ class DepartureRepositoryImplTest {
 
         Departure saveDeparture = departureRepository.saveDeparture(Mappers.getMapper(DepartureMapper.class).toDeparture(departureEntity));
 
-        Exception exception = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Id already exist";
-
         assertAll(
-                () -> assertNotEquals(expectedMessage, exception.getMessage()),
                 () -> assertEquals(departureEntity.getIdDeparture(), saveDeparture.getDepartureId()),
                 () -> assertEquals(departureEntity.getIdAirport(), saveDeparture.getAirportId()),
                 () -> assertEquals(departureEntity.getDepartureTime(), saveDeparture.getDepartureTime())

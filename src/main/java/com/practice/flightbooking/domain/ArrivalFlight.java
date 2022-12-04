@@ -14,8 +14,6 @@ public class ArrivalFlight {
 
     private Airport airport;
 
-    private List<Travel> travel;
-
     public int getArrivalFlightId() {
         return arrivalFlightId;
     }
@@ -32,10 +30,6 @@ public class ArrivalFlight {
         return airport;
     }
 
-    public List<Travel> getTravel() {
-        return travel;
-    }
-
     protected ArrivalFlight() {}
 
     private ArrivalFlight(ArrivalFlight.Builder builder) {
@@ -43,7 +37,6 @@ public class ArrivalFlight {
         this.airportId = builder.airportId;
         this.arrivalTime = builder.arrivalTime;
         this.airport = builder.airport;
-        this.travel = builder.travel;
     }
 
     public static ArrivalFlight.Builder builder() {
@@ -59,8 +52,6 @@ public class ArrivalFlight {
         private LocalDateTime arrivalTime;
 
         private Airport airport;
-
-        private List<Travel> travel;
 
         public Builder setArrivalFlightId(final int arrivalFlightId){
             this.arrivalFlightId = arrivalFlightId;
@@ -81,12 +72,6 @@ public class ArrivalFlight {
             this.airport = airport;
             return this;
         }
-
-        public Builder setTravel(final List<Travel> travel){
-            this.travel = travel;
-            return this;
-        }
-
         public ArrivalFlight create() {
             return new ArrivalFlight(this);
         }

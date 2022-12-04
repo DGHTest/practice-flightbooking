@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("dev")
 class PassengersTravelServiceTest {
 
     @Autowired
@@ -32,7 +34,7 @@ class PassengersTravelServiceTest {
 
     @Test
     @DisplayName("Should return all passengersTravels with the specific passengerId using the repository")
-    void getPassengersTravelByIdPassenger() throws Exception {
+    void getPassengersTravelByIdPassenger() {
         PassengersTravel passengersTravelsEntity1 = PassengersTravel.builder()
                 .setTravelId(33).create();
 
@@ -40,9 +42,9 @@ class PassengersTravelServiceTest {
                 .setTravelId(44).create();
 
         Mockito.when(passengersTravelRepository.getPassengersTravelByIdPassenger(2))
-                .thenReturn(Arrays.asList(passengersTravelsEntity1, passengersTravelsEntity2));
+                .thenReturn(Optional.of(Arrays.asList(passengersTravelsEntity1, passengersTravelsEntity2)));
 
-        List<PassengersTravel> passengersTravels = passengersTravelService.getPassengersTravelByIdPassenger(2);
+        List<PassengersTravel> passengersTravels = passengersTravelService.getPassengersTravelByIdPassenger(2).get();
 
         assertAll(
                 () -> Assertions.assertThat(passengersTravels.size()).isEqualTo(2),
@@ -52,7 +54,7 @@ class PassengersTravelServiceTest {
 
     @Test
     @DisplayName("Should transform two specific id to passengersTravelEntity and save it and then return it with the mapper to passengersTravel or throw an error if the id already exist")
-    void savePassengersTravel() throws Exception {
+    void savePassengersTravel() {
         PassengersTravel passengersTravel = PassengersTravel.builder()
                 .setTravelId(11).create();
 

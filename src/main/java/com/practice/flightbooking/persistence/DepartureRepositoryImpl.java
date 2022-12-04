@@ -29,46 +29,26 @@ public class DepartureRepositoryImpl implements DepartureRepository {
     }
 
     @Override
-    public Departure getDepartureById(int departureId) throws Exception {
-        Optional<DepartureEntity> arrivalFlightById = departureCrudRepository.findById(departureId);
-
-        if (arrivalFlightById.isPresent()) {
-            return departureMapper.toDeparture(arrivalFlightById.get());
-        } else {
-            throw new Exception("Departure by id not found");
-        }
+    public Optional<Departure> getDepartureById(int departureId) {
+        return departureCrudRepository.findById(departureId)
+                .map(departure -> departureMapper.toDeparture(departure));
     }
 
     @Override
-    public List<Departure> getByIdAirport(int airportId) throws Exception {
-        Optional<List<DepartureEntity>> departureByIdAirport = departureCrudRepository.findByIdAirportAndStatus(airportId, true);
-
-        if (departureByIdAirport.isPresent()) {
-            return departureMapper.toDepartures(departureByIdAirport.get());
-        } else {
-            throw new Exception("Airport id not found");
-        }
+    public Optional<List<Departure>> getByIdAirport(int airportId) {
+        return departureCrudRepository.findByIdAirportAndStatus(airportId, true)
+                .map(departures -> departureMapper.toDepartures(departures));
     }
 
     @Override
-    public List<Departure> getByDepartureTime(LocalDateTime departureTime) throws Exception {
-        Optional<List<DepartureEntity>> departureByArrivalTime = departureCrudRepository.findByDepartureTimeAfterAndStatus(departureTime, true);
-
-        if (departureByArrivalTime.isPresent()) {
-            return departureMapper.toDepartures(departureByArrivalTime.get());
-        } else {
-            throw new Exception("There are no departures after the given departure time");
-        }
+    public Optional<List<Departure>> getByDepartureTime(LocalDateTime departureTime) {
+        return departureCrudRepository.findByDepartureTimeAfterAndStatus(departureTime, true)
+                .map(departures -> departureMapper.toDepartures(departures));
     }
 
     @Override
-    public Departure saveDeparture(Departure departure) throws Exception {
+    public Departure saveDeparture(Departure departure) {
         DepartureEntity departureEntity = departureMapper.toDepartureEntity(departure);
-
-        if (!departureCrudRepository.existsById(departureEntity.getIdDeparture())) {
-            return departureMapper.toDeparture(departureCrudRepository.save(departureEntity));
-        } else {
-            throw new Exception("Id already exist");
-        }
+        return departureMapper.toDeparture(departureCrudRepository.save(departureEntity));
     }
 }

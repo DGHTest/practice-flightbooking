@@ -49,7 +49,7 @@ public class PassengerEntity {
     @Column(length=3, nullable=false)
     private String nationality;
 
-    @Column(nullable=false)
+    @Column(name = "passenger_status", nullable=false)
     private Boolean status;
 
     @OneToMany(mappedBy = "passengerEntity")

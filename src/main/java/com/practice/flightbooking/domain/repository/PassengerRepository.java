@@ -2,16 +2,18 @@ package com.practice.flightbooking.domain.repository;
 
 import com.practice.flightbooking.domain.Passenger;
 
+import java.util.Optional;
+
 public interface PassengerRepository {
 
-    Passenger getPassengerById(int passengerId) throws Exception;
+    Optional<Passenger> getPassengerById(int passengerId);
 
-    Passenger getPassengerByEmail(String email)throws Exception;
+    Optional<Passenger> getPassengerByEmail(String email);
 
-    Passenger savePassenger(Passenger passenger) throws Exception;
+    Passenger savePassenger(Passenger passenger);
 
-    void updatePassengerStatusById(boolean status, int passengerId) throws Exception;
+    void updatePassengerStatusById(boolean status, int passengerId);
 
-    void deletePassenger(int passengerId) throws Exception;
+    void deletePassenger(int passengerId);
 
 }

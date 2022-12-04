@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AirportService {
@@ -13,20 +14,20 @@ public class AirportService {
     @Autowired
     private AirportRepository airportRepository;
 
-    public Airport getById(int id) throws Exception {
+    public Optional<Airport> getById(int id) {
         return airportRepository.getById(id);
     }
 
-    public List<Airport> getByCountry(String country) throws Exception {
+    public Optional<List<Airport>> getByCountry(String country) {
         return airportRepository.getByCountry(country);
     }
 
 
-    public List<Airport> getByState(String state) throws Exception {
+    public Optional<List<Airport>> getByState(String state) {
         return airportRepository.getByState(state);
     }
 
-    public List<Airport> getByCity(String city) throws Exception {
+    public Optional<List<Airport>> getByCity(String city) {
         return airportRepository.getByCity(city);
     }
 }

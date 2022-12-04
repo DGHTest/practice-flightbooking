@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PassengersTravelService {
@@ -14,11 +15,11 @@ public class PassengersTravelService {
     @Autowired
     private PassengersTravelRepository passengersTravelRepository;
 
-    public List<PassengersTravel> getPassengersTravelByIdPassenger(int passengerId) throws Exception {
+    public Optional<List<PassengersTravel>> getPassengersTravelByIdPassenger(int passengerId) {
         return passengersTravelRepository.getPassengersTravelByIdPassenger(passengerId);
     }
 
-    public PassengersTravel savePassengersTravel(int travelId, int passengerId) throws Exception {
+    public PassengersTravel savePassengersTravel(int travelId, int passengerId) {
         return passengersTravelRepository.savePassengersTravel(travelId, passengerId);
     }
 }

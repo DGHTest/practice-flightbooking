@@ -7,16 +7,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@ActiveProfiles("dev")
 class DepartureMapperTest {
 
     @Autowired
-    private DepartureMapper departureMapper = Mappers.getMapper(DepartureMapper.class);
+    private DepartureMapper departureMapper;
 
     @Test
     @DisplayName("Should transform the entity information to service information")

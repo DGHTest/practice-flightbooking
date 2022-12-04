@@ -20,7 +20,7 @@ public class DepartureEntity {
     @Column(name = "departure_time", nullable = false)
     private LocalDateTime departureTime;
 
-    @Column(nullable = false)
+    @Column(name = "departure_status", nullable = false)
     private Boolean status;
 
     @ManyToOne

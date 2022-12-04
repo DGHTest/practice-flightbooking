@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -26,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("dev")
 class TicketServiceTest {
 
     @Autowired
@@ -64,11 +66,11 @@ class TicketServiceTest {
 
     @Test
     @DisplayName("Should return one ticket with his specific id using the repository")
-    void getTicketById() throws Exception {
+    void getTicketById() {
         Mockito.when(ticketRepository.getTicketById(3))
-                .thenReturn(tickets.get(2));
+                .thenReturn(Optional.of(tickets.get(2)));
 
-        Ticket ticketsById = ticketService.getTicketById(3);
+        Ticket ticketsById = ticketService.getTicketById(3).get();
 
         assertAll(
                 () -> assertEquals(3, ticketsById.getTicketId()),
@@ -79,11 +81,11 @@ class TicketServiceTest {
 
     @Test
     @DisplayName("Should return all tickets with the specific idPassenger using the repository")
-    void getByIdPassenger() throws Exception {
+    void getByIdPassenger() {
         Mockito.when(ticketRepository.getByIdPassenger(8))
-                .thenReturn(Arrays.asList(tickets.get(1), tickets.get(2)));
+                .thenReturn(Optional.of(Arrays.asList(tickets.get(1), tickets.get(2))));
 
-        List<Ticket> ticketsByIdPassenger = ticketService.getByIdPassenger(8);
+        List<Ticket> ticketsByIdPassenger = ticketService.getByIdPassenger(8).get();
 
         assertAll(
                 () -> assertThat(ticketsByIdPassenger.size()).isEqualTo(2),
@@ -95,7 +97,7 @@ class TicketServiceTest {
 
     @Test
     @DisplayName("Should save one ticket and return it using the repository")
-    void saveTicket() throws Exception {
+    void saveTicket() {
         Ticket ticket = Ticket.builder()
                 .setTicketId(1)
                 .setPassengerId(4)

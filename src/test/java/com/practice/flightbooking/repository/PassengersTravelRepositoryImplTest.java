@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("dev")
 class PassengersTravelRepositoryImplTest {
 
     @Autowired
@@ -35,7 +37,7 @@ class PassengersTravelRepositoryImplTest {
     private PassengersTravelsCrudRepository passengersTravelsCrudRepository;
 
     @Test
-    @DisplayName("Should return all passengersTravelEntities with the specific passengerId and the mapper should transform to passengersTravel with only travelId or throw an error if the id is not found")
+    @DisplayName("Should return all passengersTravelEntities with the specific passengerId and the mapper should transform to passengersTravel with only travelId")
     void getPassengersTravelByIdPassenger() throws Exception {
         PassengersTravelsEntity passengersTravelsEntity1 = PassengersTravelsEntity.builder()
                 .setPassengerTravelsId(PassengersTravelsEntityPk.builder()
@@ -52,24 +54,17 @@ class PassengersTravelRepositoryImplTest {
         Mockito.when(passengersTravelsCrudRepository.findByPassengerTravelsIdIdPassenger(2))
                 .thenReturn(optionalPassengersTravels);
 
-        List<PassengersTravel> passengersTravels = passengersTravelRepository.getPassengersTravelByIdPassenger(2);
-
-        Exception exception1 = assertThrows(Exception.class, () -> passengersTravelRepository.getPassengersTravelByIdPassenger(6));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Passenger id not found";
+        List<PassengersTravel> passengersTravels = passengersTravelRepository.getPassengersTravelByIdPassenger(2).get();
 
         assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
                 () -> Assertions.assertThat(passengersTravels.size()).isEqualTo(2),
                 () -> assertEquals(Arrays.asList(33, 44), passengersTravels.stream().map(PassengersTravel::getTravelId).collect(Collectors.toList()))
         );
     }
 
     @Test
-    @DisplayName("Should transform two specific id to passengersTravelEntity and save it and then return it with the mapper to passengersTravel or throw an error if the id already exist")
-    void savePassengersTravel() throws Exception {
+    @DisplayName("Should transform two specific id to passengersTravelEntity and save it and then return it with the mapper to passengersTravel")
+    void savePassengersTravel() {
         PassengersTravelsEntity passengersTravelsEntity = PassengersTravelsEntity.builder()
                 .setPassengerTravelsId(PassengersTravelsEntityPk.builder()
                         .setIdTravel(11).setIdPassenger(1)

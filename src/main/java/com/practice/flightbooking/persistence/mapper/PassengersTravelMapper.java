@@ -9,10 +9,8 @@ import org.mapstruct.Mappings;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = TravelMapper.class)
 public interface PassengersTravelMapper {
-
-    //PassengersTravelMapper mapper = Mappers.getMapper(PassengersTravelMapper.class);
 
     @Mapping(source = "passengerTravelsId.idTravel", target = "travelId")
     PassengersTravel toPassengersTravel(PassengersTravelsEntity passengersTravelsEntity);

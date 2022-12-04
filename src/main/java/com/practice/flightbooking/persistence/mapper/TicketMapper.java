@@ -9,10 +9,8 @@ import org.mapstruct.Mappings;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = TravelMapper.class)
 public interface TicketMapper {
-
-    //TicketMapper ticketMapper = Mappers.getMapper(TicketMapper.class);
 
     @Mappings({
             @Mapping(source = "idTicket", target = "ticketId"),

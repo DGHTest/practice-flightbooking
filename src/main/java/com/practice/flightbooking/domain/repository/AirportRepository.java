@@ -3,15 +3,16 @@ package com.practice.flightbooking.domain.repository;
 import com.practice.flightbooking.domain.Airport;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AirportRepository {
 
-    Airport getById(int id) throws Exception;
+    Optional<Airport> getById(int id);
 
-    List<Airport> getByCountry(String country) throws Exception;
+    Optional<List<Airport>> getByCountry(String country);
 
-    List<Airport> getByState(String state) throws Exception;
+    Optional<List<Airport>> getByState(String state);
 
-    List<Airport> getByCity(String city) throws Exception;
+    Optional<List<Airport>> getByCity(String city);
 
 }

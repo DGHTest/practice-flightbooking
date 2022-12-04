@@ -16,6 +16,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("dev")
 @SpringBootTest
 class ArrivalFlightServiceTest {
 
@@ -78,11 +80,11 @@ class ArrivalFlightServiceTest {
 
     @Test
     @DisplayName("Should return one arrivalFlight with the specific id using the repository")
-    void getArrivalById() throws Exception {
+    void getArrivalById() {
         Mockito.when(arrivalFlightRepository.getArrivalById(33))
-                .thenReturn(arrivalFlights.get(1));
+                .thenReturn(Optional.of(arrivalFlights.get(1)));
 
-        ArrivalFlight arrivalFlightById = arrivalFlightService.getArrivalById(33);
+        ArrivalFlight arrivalFlightById = arrivalFlightService.getArrivalById(33).get();
 
         assertAll(
                 () -> assertEquals(33, arrivalFlightById.getArrivalFlightId()),
@@ -92,11 +94,11 @@ class ArrivalFlightServiceTest {
 
     @Test
     @DisplayName("Should return all arrivalFlights with the specific idAirport using the repository")
-    void getByIdAirport() throws Exception {
+    void getByIdAirport() {
         Mockito.when(arrivalFlightRepository.getByIdAirport(213))
-                .thenReturn(Arrays.asList(arrivalFlights.get(0), arrivalFlights.get(2)));
+                .thenReturn(Optional.of(Arrays.asList(arrivalFlights.get(0), arrivalFlights.get(2))));
 
-        List<ArrivalFlight> arrivalByIdAirport = arrivalFlightService.getByIdAirport(213);
+        List<ArrivalFlight> arrivalByIdAirport = arrivalFlightService.getByIdAirport(213).get();
 
         assertAll(
                 () -> assertThat(arrivalByIdAirport.size()).isEqualTo(2),
@@ -107,11 +109,11 @@ class ArrivalFlightServiceTest {
 
     @Test
     @DisplayName("Should return all arrivalFlights with one date after the specified using the repository")
-    void getByArrivalTime() throws Exception {
+    void getByArrivalTime() {
         Mockito.when(arrivalFlightRepository.getByArrivalTime(LocalDateTime.of(2000, Month.APRIL, 01, 01, 00, 00)))
-                .thenReturn(arrivalFlights);
+                .thenReturn(Optional.of(arrivalFlights));
 
-        List<ArrivalFlight> arrivalsByArrivalTime = arrivalFlightService.getByArrivalTime(LocalDateTime.of(2000, Month.APRIL, 01, 01, 00, 00));
+        List<ArrivalFlight> arrivalsByArrivalTime = arrivalFlightService.getByArrivalTime(LocalDateTime.of(2000, Month.APRIL, 01, 01, 00, 00)).get();
 
         assertAll(
                 () -> assertThat(arrivalsByArrivalTime.size()).isEqualTo(3),
@@ -124,7 +126,7 @@ class ArrivalFlightServiceTest {
 
     @Test
     @DisplayName("Should save one arrivalFlight and return it with the use of repository")
-    void saveArrival() throws Exception {
+    void saveArrival() {
         ArrivalFlight arrivalFlight = ArrivalFlight.builder()
                 .setArrivalFlightId(32)
                 .setAirportId(21)

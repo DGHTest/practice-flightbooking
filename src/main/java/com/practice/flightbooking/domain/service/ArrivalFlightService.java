@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ArrivalFlightService {
@@ -18,19 +19,19 @@ public class ArrivalFlightService {
         return arrivalFlightRepository.getAllArrivalFlights();
     }
 
-    public ArrivalFlight getArrivalById(int arrivalId) throws Exception {
+    public Optional<ArrivalFlight> getArrivalById(int arrivalId) {
         return arrivalFlightRepository.getArrivalById(arrivalId);
     }
 
-    public List<ArrivalFlight> getByIdAirport(int airportId) throws Exception {
+    public Optional<List<ArrivalFlight>> getByIdAirport(int airportId) {
         return arrivalFlightRepository.getByIdAirport(airportId);
     }
 
-    public List<ArrivalFlight> getByArrivalTime(LocalDateTime arrivalTime) throws Exception {
+    public Optional<List<ArrivalFlight>> getByArrivalTime(LocalDateTime arrivalTime) {
         return arrivalFlightRepository.getByArrivalTime(arrivalTime);
     }
 
-    public ArrivalFlight saveArrival(ArrivalFlight arrivalFlight) throws Exception {
+    public ArrivalFlight saveArrival(ArrivalFlight arrivalFlight) {
         return arrivalFlightRepository.saveArrival(arrivalFlight);
     }
 }

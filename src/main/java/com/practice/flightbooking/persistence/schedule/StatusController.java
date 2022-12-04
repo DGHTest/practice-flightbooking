@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
+//TODO arreglar esta clase una vez acabado de testear los controles
 @Configuration
 @EnableScheduling
 public class StatusController {

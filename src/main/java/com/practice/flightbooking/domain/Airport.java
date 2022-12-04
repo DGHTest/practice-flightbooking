@@ -1,5 +1,12 @@
 package com.practice.flightbooking.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.practice.flightbooking.persistence.entity.ArrivalFlightEntity;
+import com.practice.flightbooking.persistence.entity.DepartureEntity;
+
+import javax.persistence.OneToMany;
+import java.util.List;
+
 public class Airport {
 
     private int airportId;

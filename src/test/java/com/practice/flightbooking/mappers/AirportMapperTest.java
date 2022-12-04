@@ -2,17 +2,31 @@ package com.practice.flightbooking.mappers;
 
 import com.practice.flightbooking.domain.Airport;
 import com.practice.flightbooking.persistence.entity.AirportEntity;
+import com.practice.flightbooking.persistence.entity.ArrivalFlightEntity;
+import com.practice.flightbooking.persistence.entity.DepartureEntity;
 import com.practice.flightbooking.persistence.mapper.AirportMapper;
+import com.practice.flightbooking.persistence.mapper.ArrivalFlightMapper;
+import com.practice.flightbooking.persistence.mapper.DepartureMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
+@ActiveProfiles("dev")
 public class AirportMapperTest {
 
-    private AirportMapper airportMapper = Mappers.getMapper(AirportMapper.class);
+    @Autowired
+    private AirportMapper airportMapper;
 
     @Test
     @DisplayName("Should transform the entity information to service information")

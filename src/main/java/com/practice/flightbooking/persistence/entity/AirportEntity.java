@@ -13,7 +13,7 @@ public class AirportEntity {
     @Column(name = "id_airport")
     private Integer idAirport;
 
-    @Column(length=200, nullable=false)
+    @Column(name = "airport_name",length=200, nullable=false)
     private String name;
 
     @Column(length=50, nullable=false)

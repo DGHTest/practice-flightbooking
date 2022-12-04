@@ -28,7 +28,7 @@ public class TravelEntity {
     @Column(nullable = false)
     private BigDecimal price;
 
-    @Column(nullable = false)
+    @Column(name = "travel_status", nullable = false)
     private Boolean status;
 
     @ManyToOne

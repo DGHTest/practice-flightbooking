@@ -10,10 +10,8 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring"/*, uses = {ArrivalFlightMapper.class, DepartureMapper.class}*/)
+@Mapper(componentModel = "spring", uses = {ArrivalFlightMapper.class, DepartureMapper.class})
 public interface TravelMapper {
-
-    TravelMapper mapper = Mappers.getMapper(TravelMapper.class);
 
     @Mappings({
             @Mapping(source = "idTravel", target = "travelId"),

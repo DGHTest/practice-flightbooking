@@ -6,15 +6,21 @@ import com.practice.flightbooking.persistence.mapper.TravelMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
+@ActiveProfiles("dev")
 class TravelMapperTest {
 
-    private TravelMapper travelMapper = Mappers.getMapper(TravelMapper.class);
+    @Autowired
+    private TravelMapper travelMapper;
 
     @Test
     @DisplayName("Should transform the travelEntity information to travelService information")

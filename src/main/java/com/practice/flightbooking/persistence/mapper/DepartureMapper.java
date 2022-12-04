@@ -10,16 +10,13 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = AirportMapper.class)
 public interface DepartureMapper {
-
-    DepartureMapper departureMapper = Mappers.getMapper(DepartureMapper.class);
 
     @Mappings({
             @Mapping(source = "idDeparture", target = "departureId"),
             @Mapping(source = "idAirport", target = "airportId"),
-            @Mapping(source = "airportEntity", target = "airport"),
-            @Mapping(source = "travelEntity", target = "travel")
+            @Mapping(source = "airportEntity", target = "airport")
     })
     Departure toDeparture(DepartureEntity departureEntity);
 
@@ -27,5 +24,6 @@ public interface DepartureMapper {
 
     @InheritInverseConfiguration
     @Mapping(target = "status", ignore = true)
+    @Mapping(target = "travelEntity", ignore = true)
     DepartureEntity toDepartureEntity(Departure departure);
 }

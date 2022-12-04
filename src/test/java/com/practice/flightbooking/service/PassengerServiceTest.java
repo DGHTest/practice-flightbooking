@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -24,6 +25,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("dev")
 class PassengerServiceTest {
 
     @Autowired
@@ -82,27 +84,26 @@ class PassengerServiceTest {
                 .create();
 
         passengers = Arrays.asList(passenger1, passenger2, passenger3);
-
     }
 
     @Test
     @DisplayName("Should return one passenger with the specific id using the repository")
-    void getPassengerById() throws Exception {
+    void getPassengerById() {
         Mockito.when(passengerRepository.getPassengerById(2))
-                .thenReturn(passengers.get(1));
+                .thenReturn(Optional.of(passengers.get(1)));
 
-        Passenger passengerById = passengerService.getPassengerById(2);
+        Passenger passengerById = passengerService.getPassengerById(2).get();
 
         assertEquals(2, passengerById.getPassengerId());
     }
 
     @Test
     @DisplayName("Should return one passenger with the specific email using the repository")
-    void getPassengerByEmail() throws Exception {
+    void getPassengerByEmail() {
         Mockito.when(passengerRepository.getPassengerByEmail("joseramirez1@random.names"))
-                .thenReturn(passengers.get(0));
+                .thenReturn(Optional.of(passengers.get(0)));
 
-        Passenger passengerByEmail = passengerService.getPassengerByEmail("joseramirez1@random.names");
+        Passenger passengerByEmail = passengerService.getPassengerByEmail("joseramirez1@random.names").get();
 
         assertAll(
                 () -> assertEquals(1, passengerByEmail.getPassengerId()),
@@ -112,7 +113,7 @@ class PassengerServiceTest {
 
     @Test
     @DisplayName("Should save one passenger and return it with the repository")
-    void savePassenger() throws Exception {
+    void savePassenger() {
         Passenger passenger = Passenger.builder()
                 .setPassengerId(32)
                 .setLastNames("Hernandez")
@@ -150,14 +151,12 @@ class PassengerServiceTest {
 
     @Test
     @DisplayName("Should update the status wanted of one passengerEntity with the specific id using the repository")
-    void updatePassengerStatusById() throws Exception {
-        PassengerService passengerServiceMock = Mockito.mock(PassengerService.class);
+    void updatePassengerStatusById() {
+        Mockito.when(passengerRepository.getPassengerById(4))
+                .thenReturn(Optional.empty());
 
-        Mockito.when(passengerService.updatePassengerStatusById(true, 4))
-                .thenThrow(Exception.class);
-
-        Mockito.doReturn(true).when(passengerServiceMock)
-                .updatePassengerStatusById(false, 8);
+        Mockito.when(passengerRepository.getPassengerById(8))
+                .thenReturn(Optional.of(passengers.get(2)));
 
         assertAll(
                 () -> assertFalse(passengerService.updatePassengerStatusById(true, 4)),
@@ -167,14 +166,15 @@ class PassengerServiceTest {
 
     @Test
     @DisplayName("Should delete one passengerEntity with the specific id using the repository")
-    void deletePassenger() throws Exception {
-        PassengerService passengerServiceMock = Mockito.mock(PassengerService.class);
+    void deletePassenger() {
+        /*Mockito.doReturn(true).when(passengerServiceMock)
+                .deletePassenger(8);*/
 
-        Mockito.when(passengerService.deletePassenger(4))
-                .thenThrow(Exception.class);
+        Mockito.when(passengerRepository.getPassengerById(4))
+                .thenReturn(Optional.empty());
 
-        Mockito.doReturn(true).when(passengerServiceMock)
-                .deletePassenger(8);
+        Mockito.when(passengerRepository.getPassengerById(8))
+                .thenReturn(Optional.of(passengers.get(2)));
 
         assertAll(
                 () -> assertFalse(passengerService.deletePassenger(4)),

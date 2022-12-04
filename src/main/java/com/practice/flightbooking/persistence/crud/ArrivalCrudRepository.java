@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ public interface ArrivalCrudRepository extends BasicCrudRepository<ArrivalFlight
     Optional<List<ArrivalFlightEntity>> findByArrivalTimeAfterAndStatus(LocalDateTime arrivalTime, boolean status);
 
     @Modifying
+    @Transactional
     @Query("UPDATE ArrivalFlightEntity af SET af.status = false WHERE af.idArrivalFlight = :id")
     void updateArrivalStatus(@Param("id") int id);
 

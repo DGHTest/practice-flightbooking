@@ -7,15 +7,21 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@ActiveProfiles("dev")
 class PassengerMapperTest {
 
-    private PassengerMapper passengerMapper = Mappers.getMapper(PassengerMapper.class);
+    @Autowired
+    private PassengerMapper passengerMapper;
 
     @Test
     @DisplayName("Should transform the entity values to service values with the data mapper")

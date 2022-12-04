@@ -13,13 +13,16 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("dev")
 @SpringBootTest
 class AirportServiceTest {
 
@@ -29,7 +32,7 @@ class AirportServiceTest {
     @MockBean
     private AirportRepository airportRepository;
 
-    private List<Airport> airports;
+    private List<Airport> airportList;
 
     @BeforeEach
     void setUp() {
@@ -49,16 +52,16 @@ class AirportServiceTest {
                 .setIata("LOL")
                 .create();
 
-        airports = Arrays.asList(airport1, airport2);
+        airportList = Arrays.asList(airport1, airport2);
     }
 
     @Test
     @DisplayName("Should return an airport that match with a specific id using the repository")
-    void getById() throws Exception {
+    void getById() {
         Mockito.when(airportRepository.getById(322))
-                .thenReturn(airports.get(1));
+                .thenReturn(Optional.of(airportList.get(1)));
 
-        Airport airportById = airportService.getById(322);
+        Airport airportById = airportService.getById(322).get();
 
         assertAll(
                 () -> assertEquals(322, airportById.getAirportId())
@@ -67,11 +70,11 @@ class AirportServiceTest {
 
     @Test
     @DisplayName("Should return all airports that match with a specific country using the repository")
-    void getByCountry() throws Exception {
+    void getByCountry() {
         Mockito.when(airportRepository.getByCountry("Mexico"))
-                .thenReturn(airports);
+                .thenReturn(Optional.of(airportList));
 
-        List<Airport> airportsByCountry = airportService.getByCountry("Mexico");
+        List<Airport> airportsByCountry = airportService.getByCountry("Mexico").get();
 
         assertAll(
                 () -> Assertions.assertThat(airportsByCountry.size()).isEqualTo(2),
@@ -82,11 +85,11 @@ class AirportServiceTest {
 
     @Test
     @DisplayName("Should return all airports that match with a specific state using the repository")
-    void getByState() throws Exception {
+    void getByState() {
         Mockito.when(airportRepository.getByState("Sonora"))
-                .thenReturn(Arrays.asList(airports.get(0)));
+                .thenReturn(Optional.of(Arrays.asList(airportList.get(0))));
 
-        List<Airport> airportsByState = airportService.getByState("Sonora");
+        List<Airport> airportsByState = airportService.getByState("Sonora").get();
 
         assertAll(
                 () -> Assertions.assertThat(airportsByState.size()).isEqualTo(1),
@@ -97,11 +100,12 @@ class AirportServiceTest {
 
     @Test
     @DisplayName("Should return all airports that match with a specific city using the repository")
-    void getByCity() throws Exception {
+    void getByCity() {
         Mockito.when(airportRepository.getByCity("Tuxtla Gutiérrez"))
-                .thenReturn(Arrays.asList(airports.get(1)));
+                .thenReturn(Optional.of(Arrays.asList(airportList.get(1))));
 
-        List<Airport> airportServiceByCity = airportService.getByCity("Tuxtla Gutiérrez");
+
+        List<Airport> airportServiceByCity = airportService.getByCity("Tuxtla Gutiérrez").get();
 
         assertAll(
                 () -> Assertions.assertThat(airportServiceByCity.size()).isEqualTo(1),

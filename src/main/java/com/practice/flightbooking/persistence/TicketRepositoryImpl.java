@@ -21,35 +21,20 @@ public class TicketRepositoryImpl implements TicketRepository {
     private TicketMapper ticketMapper;
 
     @Override
-    public Ticket getTicketById(int ticketId) throws Exception {
-        Optional<TicketEntity> ticketById = ticketCrudRepository.findById(ticketId);
-
-        if (ticketById.isPresent()) {
-            return ticketMapper.toTicket(ticketById.get());
-        } else {
-            throw new Exception("Ticket by id not found");
-        }
+    public Optional<Ticket> getTicketById(int ticketId) {
+        return ticketCrudRepository.findById(ticketId)
+                .map(ticket -> ticketMapper.toTicket(ticket));
     }
 
     @Override
-    public List<Ticket> getByIdPassenger(int passengerId) throws Exception {
-        Optional<List<TicketEntity>> ticketsByPassenger = ticketCrudRepository.findByIdPassenger(passengerId);
-
-        if (ticketsByPassenger.isPresent()) {
-            return ticketMapper.toTickets(ticketsByPassenger.get());
-        } else {
-            throw new Exception("Passenger id not found");
-        }
+    public Optional<List<Ticket>> getByIdPassenger(int passengerId) {
+        return ticketCrudRepository.findByIdPassenger(passengerId)
+                .map(tickets -> ticketMapper.toTickets(tickets));
     }
 
     @Override
-    public Ticket saveTicket(Ticket ticket) throws Exception {
+    public Ticket saveTicket(Ticket ticket){
         TicketEntity ticketEntity = ticketMapper.toTicketEntity(ticket);
-
-        if (!ticketCrudRepository.existsById(ticketEntity.getIdTicket())) {
-            return ticketMapper.toTicket(ticketCrudRepository.save(ticketEntity));
-        } else {
-            throw new Exception("Id already exist");
-        }
+        return ticketMapper.toTicket(ticketCrudRepository.save(ticketEntity));
     }
 }

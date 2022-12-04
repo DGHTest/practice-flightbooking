@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("dev")
 class TravelRepositoryImplTest {
 
     @Autowired
@@ -86,41 +88,25 @@ class TravelRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Should return one travelEntity with the specific id and the mapper should transform to travel or throw an error if the id is not found")
-    void getTravelById() throws Exception {
+    @DisplayName("Should return one travelEntity with the specific id and the mapper should transform to travel")
+    void getTravelById() {
         Mockito.when(travelCrudRepository.findById(2))
                 .thenReturn(Optional.of(optionalTravels.get().get(1)));
 
-        Travel travelById = travelRepository.getTravelById(2);
+        Travel travelById = travelRepository.getTravelById(2).get();
 
-        Exception exception1 = assertThrows(Exception.class, () -> travelRepository.getTravelById(6));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Travel by id not found";
-
-        assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
-                () -> assertEquals(2, travelById.getTravelId())
-        );
+        assertEquals(2, travelById.getTravelId());
     }
 
     @Test
-    @DisplayName("Should return all travelEntities with the specific idArrivalFlight and value true, and the mapper should transform to travels or throw an error if the idArrivalFlight is not found")
-    void getByIdArrivalFlight() throws Exception {
+    @DisplayName("Should return all travelEntities with the specific idArrivalFlight and value true, and the mapper should transform to travels")
+    void getByIdArrivalFlight() {
         Mockito.when(travelCrudRepository.findByIdArrivalFlightAndStatus(6, true))
                 .thenReturn(Optional.of(Arrays.asList(optionalTravels.get().get(1), optionalTravels.get().get(2))));
 
-        List<Travel> travelsByIdArrivalFlight = travelRepository.getByIdArrivalFlight(6);
-
-        Exception exception1 = assertThrows(Exception.class, () -> travelRepository.getByIdArrivalFlight(5));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Arrival flight id not found";
+        List<Travel> travelsByIdArrivalFlight = travelRepository.getByIdArrivalFlight(6).get();
 
         assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
                 () -> assertThat(travelsByIdArrivalFlight.size()).isEqualTo(2),
                 () -> assertEquals(Arrays.asList(2, 3), travelsByIdArrivalFlight.stream().map(Travel::getTravelId).collect(Collectors.toList())),
                 () -> assertEquals(Arrays.asList(6, 6), travelsByIdArrivalFlight.stream().map(Travel::getArrivalFlightId).collect(Collectors.toList())),
@@ -129,21 +115,14 @@ class TravelRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Should return all travelEntities with the specific idDeparture and value true, and the mapper should transform to travels or throw an error if the idDeparture is not found")
-    void getByIdDeparture() throws Exception {
+    @DisplayName("Should return all travelEntities with the specific idDeparture and value true, and the mapper should transform to travels")
+    void getByIdDeparture() {
         Mockito.when(travelCrudRepository.findByIdDepartureAndStatus(4, true))
                 .thenReturn(Optional.of(Arrays.asList(optionalTravels.get().get(0), optionalTravels.get().get(1))));
 
-        List<Travel> travelsByIdArrivalFlight = travelRepository.getByIdDeparture(4);
-
-        Exception exception1 = assertThrows(Exception.class, () -> travelRepository.getByIdDeparture(9));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Departure id not found";
+        List<Travel> travelsByIdArrivalFlight = travelRepository.getByIdDeparture(4).get();
 
         assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
                 () -> assertThat(travelsByIdArrivalFlight.size()).isEqualTo(2),
                 () -> assertEquals(Arrays.asList(1, 2), travelsByIdArrivalFlight.stream().map(Travel::getTravelId).collect(Collectors.toList())),
                 () -> assertEquals(Arrays.asList(1, 6), travelsByIdArrivalFlight.stream().map(Travel::getArrivalFlightId).collect(Collectors.toList())),
@@ -153,7 +132,7 @@ class TravelRepositoryImplTest {
 
     @Test
     @DisplayName("Should save one travelEntity and return it with the mapper to travel or throw an error if the id already exist")
-    void saveTravel() throws Exception {
+    void saveTravel() {
         TravelEntity travelEntity = TravelEntity.builder()
                 .setIdTravel(51)
                 .setIdArrivalFlight(32)
@@ -164,14 +143,9 @@ class TravelRepositoryImplTest {
 
         Mockito.when(travelCrudRepository.save(ArgumentMatchers.any())).thenReturn(travelEntity);
 
-        Travel saveTravel = travelRepository.saveTravel(Mappers.getMapper(TravelMapper.class).toTravel(travelEntity));
-
-        Exception exception = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Id already exist";
+        Travel saveTravel = travelRepository.saveTravel(travelMapper.toTravel(travelEntity));
 
         assertAll(
-                () -> assertNotEquals(expectedMessage, exception.getMessage()),
                 () -> assertEquals(travelEntity.getIdTravel(), saveTravel.getTravelId()),
                 () -> assertEquals(travelEntity.getIdArrivalFlight(), saveTravel.getArrivalFlightId()),
                 () -> assertEquals(travelEntity.getIdDeparture(), saveTravel.getDepartureId()),

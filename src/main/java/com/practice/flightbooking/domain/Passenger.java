@@ -32,8 +32,6 @@ public class Passenger {
 
     private List<PassengersTravel> passengersTravel;
 
-    private List<Ticket> tickets;
-
     public int getPassengerId() {
         return passengerId;
     }
@@ -86,10 +84,6 @@ public class Passenger {
         return passengersTravel;
     }
 
-    public List<Ticket> getTickets() {
-        return tickets;
-    }
-
     protected Passenger() {}
 
     private Passenger(Passenger.Builder builder) {
@@ -106,7 +100,6 @@ public class Passenger {
         this.expirationDate = builder.expirationDate;
         this.nationality = builder.nationality;
         this.passengersTravel = builder.passengersTravel;
-        this.tickets = builder.tickets;
     }
 
     public static Passenger.Builder builder() {
@@ -128,7 +121,6 @@ public class Passenger {
         private LocalDate expirationDate;
         private String nationality;
         private List<PassengersTravel> passengersTravel;
-        private List<Ticket> tickets;
 
         public Builder setPassengerId(final int passengerId){
             this.passengerId = passengerId;
@@ -192,11 +184,6 @@ public class Passenger {
 
         public Builder setPassengersTravel(final List<PassengersTravel> passengersTravel){
             this.passengersTravel = passengersTravel;
-            return this;
-        }
-
-        public Builder setTickets(final List<Ticket> tickets){
-            this.tickets = tickets;
             return this;
         }
 

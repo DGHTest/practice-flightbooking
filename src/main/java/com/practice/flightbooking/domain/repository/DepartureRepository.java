@@ -5,16 +5,17 @@ import com.practice.flightbooking.domain.Departure;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface DepartureRepository {
 
     List<Departure> getAllDepartures();
 
-    Departure getDepartureById(int departureId) throws Exception;
+    Optional<Departure> getDepartureById(int departureId);
 
-    List<Departure> getByIdAirport(int airportId) throws Exception;
+    Optional<List<Departure>> getByIdAirport(int airportId);
 
-    List<Departure> getByDepartureTime(LocalDateTime departureTime) throws Exception;
+    Optional<List<Departure>> getByDepartureTime(LocalDateTime departureTime);
 
-    Departure saveDeparture(Departure departure) throws Exception;
+    Departure saveDeparture(Departure departure);
 }

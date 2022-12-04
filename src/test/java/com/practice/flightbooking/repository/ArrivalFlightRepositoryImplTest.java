@@ -3,7 +3,9 @@ package com.practice.flightbooking.repository;
 import com.practice.flightbooking.domain.repository.ArrivalFlightRepository;
 import com.practice.flightbooking.domain.ArrivalFlight;
 import com.practice.flightbooking.persistence.crud.ArrivalCrudRepository;
+import com.practice.flightbooking.persistence.entity.AirportEntity;
 import com.practice.flightbooking.persistence.entity.ArrivalFlightEntity;
+import com.practice.flightbooking.persistence.entity.TravelEntity;
 import com.practice.flightbooking.persistence.mapper.ArrivalFlightMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +17,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
@@ -26,7 +30,9 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+
 @SpringBootTest
+@ActiveProfiles("dev")
 class ArrivalFlightRepositoryImplTest {
 
     @Autowired
@@ -82,41 +88,25 @@ class ArrivalFlightRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Should return one arrivalFlightEntity with the specific id and the mapper should transform to arrivalFlight or throw an error if the id is not found")
+    @DisplayName("Should return one arrivalFlightEntity with the specific id and the mapper should transform to arrivalFlight")
     void getArrivalById() throws Exception {
         Mockito.when(arrivalCrudRepository.findById(3))
                 .thenReturn(Optional.of(optionalArrivalFlights.get().get(2)));
 
-        ArrivalFlight airportById = arrivalFlightRepository.getArrivalById(3);
+        ArrivalFlight airportById = arrivalFlightRepository.getArrivalById(3).get();
 
-        Exception exception1 = assertThrows(Exception.class, () -> arrivalFlightRepository.getArrivalById(6));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Arrival flight by id not found";
-
-        assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
-                () -> assertEquals(3, airportById.getArrivalFlightId())
-        );
+        assertEquals(3, airportById.getArrivalFlightId());
     }
 
     @Test
-    @DisplayName("Should return all arrivalFlightEntities with the specific idAirport and value true, and the mapper should transform to arrivalFlights or throw an error if the idAirport is not found")
+    @DisplayName("Should return all arrivalFlightEntities with the specific idAirport and value true, and the mapper should transform to arrivalFlights")
     void getByIdAirport() throws Exception {
         Mockito.when(arrivalCrudRepository.findByIdAirportAndStatus(3, true))
                 .thenReturn(Optional.of(Arrays.asList(optionalArrivalFlights.get().get(0), optionalArrivalFlights.get().get(1))));
 
-        List<ArrivalFlight> airportById = arrivalFlightRepository.getByIdAirport(3);
-
-        Exception exception1 = assertThrows(Exception.class, () -> arrivalFlightRepository.getByIdAirport(6));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Airport id not found";
+        List<ArrivalFlight> airportById = arrivalFlightRepository.getByIdAirport(3).get();
 
         assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
                 () -> assertThat(airportById.size()).isEqualTo(2),
                 () -> assertEquals(Arrays.asList(1, 2), airportById.stream().map(ArrivalFlight::getArrivalFlightId).collect(Collectors.toList())),
                 () -> assertEquals(Arrays.asList(3, 3), airportById.stream().map(ArrivalFlight::getAirportId).collect(Collectors.toList()))
@@ -124,7 +114,7 @@ class ArrivalFlightRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Should return all arrivalFlightEntities with one date after the specified and value true, and the mapper should transform to arrivalFlights or throw an error if there are no arrival flights")
+    @DisplayName("Should return all arrivalFlightEntities with one date after the specified and value true, and the mapper should transform to arrivalFlights")
     void getByArrivalTime() throws Exception {
         ArrivalFlightEntity arrivalFlightEntity = ArrivalFlightEntity.builder()
                 .setIdArrivalFlight(4)
@@ -136,16 +126,9 @@ class ArrivalFlightRepositoryImplTest {
         Mockito.when(arrivalCrudRepository.findByArrivalTimeAfterAndStatus(LocalDateTime.of(2000, Month.APRIL, 01, 01, 00, 00), true))
                 .thenReturn(Optional.of(Arrays.asList(arrivalFlightEntity)));
 
-        List<ArrivalFlight> airportByArrivalTime = arrivalFlightRepository.getByArrivalTime(LocalDateTime.of(2000, Month.APRIL, 01, 01, 00, 00));
-
-        Exception exception1 = assertThrows(Exception.class, () -> arrivalFlightRepository.getByArrivalTime(LocalDateTime.of(2024, Month.NOVEMBER, 9, 16, 30, 00)));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "There are no arrival flights after the given arrival time";
+        List<ArrivalFlight> airportByArrivalTime = arrivalFlightRepository.getByArrivalTime(LocalDateTime.of(2000, Month.APRIL, 01, 01, 00, 00)).get();
 
         assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
                 () -> assertThat(airportByArrivalTime.size()).isEqualTo(1),
                 () -> assertEquals(Arrays.asList(4), airportByArrivalTime.stream().map(ArrivalFlight::getArrivalFlightId).collect(Collectors.toList())),
                 () -> assertEquals(Arrays.asList(32), airportByArrivalTime.stream().map(ArrivalFlight::getAirportId).collect(Collectors.toList())),
@@ -155,25 +138,21 @@ class ArrivalFlightRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Should save one arrivalFlightEntity and return it with the mapper to arrivalFlight or throw an error if the id already exist")
+    @DisplayName("Should save one arrivalFlightEntity and return it with the mapper to arrivalFlight")
     void saveArrival() throws Exception {
         ArrivalFlightEntity arrivalFlightEntity = ArrivalFlightEntity.builder()
                 .setIdArrivalFlight(32)
                 .setIdAirport(21)
+                .setAirportEntity(AirportEntity.builder().setIdAirport(3).setName("tgsg").setState("esfesfa").setCity("fesgasga").setIata("RGH").create())
                 .setArrivalTime(LocalDateTime.of(2025, Month.JANUARY, 21, 23, 10, 11))
                 .setStatus(true)
                 .create();
 
         Mockito.when(arrivalCrudRepository.save(ArgumentMatchers.any())).thenReturn(arrivalFlightEntity);
 
-        ArrivalFlight saveArrivalFlight = arrivalFlightRepository.saveArrival(Mappers.getMapper(ArrivalFlightMapper.class).toArrivalFlight(arrivalFlightEntity));
-
-        Exception exception = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Id already exist";
+        ArrivalFlight saveArrivalFlight = arrivalFlightRepository.saveArrival(arrivalFlightMapper.toArrivalFlight(arrivalFlightEntity));
 
         assertAll(
-                () -> assertNotEquals(expectedMessage, exception.getMessage()),
                 () -> assertEquals(arrivalFlightEntity.getIdArrivalFlight(), saveArrivalFlight.getArrivalFlightId()),
                 () -> assertEquals(arrivalFlightEntity.getIdAirport(), saveArrivalFlight.getAirportId()),
                 () -> assertEquals(arrivalFlightEntity.getArrivalTime(), saveArrivalFlight.getArrivalTime())

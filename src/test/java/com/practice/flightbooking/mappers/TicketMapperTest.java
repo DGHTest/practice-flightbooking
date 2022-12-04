@@ -6,14 +6,20 @@ import com.practice.flightbooking.persistence.mapper.TicketMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@ActiveProfiles("dev")
 class TicketMapperTest {
 
-    private TicketMapper ticketMapper = Mappers.getMapper(TicketMapper.class);
+    @Autowired
+    private TicketMapper ticketMapper;
 
     @Test
     @DisplayName("Should transform the ticketEntity information to ticketService information")

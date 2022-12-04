@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -76,9 +77,9 @@ class DepartureServiceTest {
     @DisplayName("Should return one departure with the specific id using the repository")
     void getDepartureById() throws Exception {
         Mockito.when(departureRepository.getDepartureById(33))
-                .thenReturn(departures.get(1));
+                .thenReturn(Optional.of(departures.get(1)));
 
-        Departure departureById = departureService.getDepartureById(33);
+        Departure departureById = departureService.getDepartureById(33).get();
 
         assertAll(
                 () -> assertEquals(33, departureById.getDepartureId()),
@@ -90,9 +91,9 @@ class DepartureServiceTest {
     @DisplayName("Should return all departures with the specific idAirport using the repository")
     void getByIdAirport() throws Exception {
         Mockito.when(departureRepository.getByIdAirport(213))
-                .thenReturn(Arrays.asList(departures.get(0), departures.get(2)));
+                .thenReturn(Optional.of(Arrays.asList(departures.get(0), departures.get(2))));
 
-        List<Departure> departureByIdAirport = departureService.getByIdAirport(213);
+        List<Departure> departureByIdAirport = departureService.getByIdAirport(213).get();
 
         assertAll(
                 () -> assertThat(departureByIdAirport.size()).isEqualTo(2),
@@ -107,9 +108,9 @@ class DepartureServiceTest {
         LocalDateTime localDateTime = LocalDateTime.of(2000, Month.APRIL, 1, 1, 0, 0);
 
         Mockito.when(departureRepository.getByDepartureTime(localDateTime))
-                .thenReturn(departures);
+                .thenReturn(Optional.of(departures));
 
-        List<Departure> departuresByArrivalTime = departureService.getByDepartureTime(localDateTime);
+        List<Departure> departuresByArrivalTime = departureService.getByDepartureTime(localDateTime).get();
 
         assertAll(
                 () -> assertThat(departuresByArrivalTime.size()).isEqualTo(3),

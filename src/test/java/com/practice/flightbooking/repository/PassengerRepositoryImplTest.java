@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -24,6 +25,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("dev")
 class PassengerRepositoryImplTest {
 
     @Autowired
@@ -91,48 +93,32 @@ class PassengerRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Should return one passengerEntity with the specific id and the mapper should transform to passenger or throw an error if the id is not found")
+    @DisplayName("Should return one passengerEntity with the specific id and the mapper should transform to passenger")
     void getPassengerById() throws Exception {
         Mockito.when(passengerCrudRepository.findById(2))
                 .thenReturn(Optional.of(optionalPassengers.get().get(1)));
 
-        Passenger passengerById = passengerRepository.getPassengerById(2);
+        Passenger passengerById = passengerRepository.getPassengerById(2).get();
 
-        Exception exception1 = assertThrows(Exception.class, () -> passengerRepository.getPassengerById(6));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Passenger id not found";
-
-        assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
-                () -> assertEquals(2, passengerById.getPassengerId())
-        );
+        assertEquals(2, passengerById.getPassengerId());
     }
 
     @Test
-    @DisplayName("Should return one passengerEntity with the specific email and the mapper should transform to passenger or throw an error if the email is not found")
+    @DisplayName("Should return one passengerEntity with the specific email and the mapper should transform to passenger")
     void getPassengerByEmail() throws Exception {
         Mockito.when(passengerCrudRepository.findByEmail("joseramirez1@random.names"))
                 .thenReturn(Optional.of(optionalPassengers.get().get(0)));
 
-        Passenger passengerByEmail = passengerRepository.getPassengerByEmail("joseramirez1@random.names");
-
-        Exception exception1 = assertThrows(Exception.class, () -> passengerRepository.getPassengerByEmail("@random.names"));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Email not found";
+        Passenger passengerByEmail = passengerRepository.getPassengerByEmail("joseramirez1@random.names").get();
 
         assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
                 () -> assertEquals(1, passengerByEmail.getPassengerId()),
                 () -> assertEquals("joseramirez1@random.names", passengerByEmail.getEmail())
         );
     }
 
     @Test
-    @DisplayName("Should save one passengerEntity and return it with the mapper to passenger or throw an error if the id already exist")
+    @DisplayName("Should save one passengerEntity and return it with the mapper to passenger")
     void savePassenger() throws Exception {
         PassengerEntity passengerEntity = PassengerEntity.builder()
                 .setIdPassenger(32)
@@ -152,14 +138,9 @@ class PassengerRepositoryImplTest {
 
         Mockito.when(passengerCrudRepository.save(ArgumentMatchers.any())).thenReturn(passengerEntity);
 
-        Passenger savePassenger = passengerRepository.savePassenger(Mappers.getMapper(PassengerMapper.class).toPassenger(passengerEntity));
-
-        Exception exception = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Id already exist";
+        Passenger savePassenger = passengerRepository.savePassenger(passengerMapper.toPassenger(passengerEntity));
 
         assertAll(
-                () -> assertNotEquals(expectedMessage, exception.getMessage()),
                 () -> assertEquals(passengerEntity.getIdPassenger(), savePassenger.getPassengerId()),
                 () -> assertEquals(passengerEntity.getLastNames(), savePassenger.getLastNames()),
                 () -> assertEquals(passengerEntity.getFirstName(), savePassenger.getFirstName()),
@@ -176,7 +157,7 @@ class PassengerRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Should update the status wanted of one passengerEntity with the specific id or throw an error if the id is not found")
+    @DisplayName("Should update the status wanted of one passengerEntity with the specific id")
     void updatePassengerStatusById() throws Exception {
         PassengerRepository passengerRepositoryMock = Mockito.mock(PassengerRepository.class);
         Mockito.doNothing().when(passengerRepositoryMock).updatePassengerStatusById(Mockito.isA(Boolean.class), Mockito.isA(Integer.class));
@@ -184,36 +165,20 @@ class PassengerRepositoryImplTest {
         passengerRepositoryMock.updatePassengerStatusById(true, 3);
         passengerRepositoryMock.updatePassengerStatusById(false, 3);
 
-        Exception exception1 = assertThrows(Exception.class, () -> passengerRepository.updatePassengerStatusById(true, 6));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Id not found";
-
         assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
                 () -> Mockito.verify(passengerRepositoryMock, Mockito.times(1)).updatePassengerStatusById(true, 3),
                 () -> Mockito.verify(passengerRepositoryMock, Mockito.times(1)).updatePassengerStatusById(false, 3)
         );
     }
 
     @Test
-    @DisplayName("Should delete one passengerEntity with the specific id or throw an error if the id is not found")
+    @DisplayName("Should delete one passengerEntity with the specific id")
     void deletePassenger() throws Exception {
         PassengerRepository passengerRepositoryMock = Mockito.mock(PassengerRepository.class);
         Mockito.doNothing().when(passengerRepositoryMock).deletePassenger(Mockito.isA(Integer.class));
 
         passengerRepositoryMock.deletePassenger(1);
 
-        Exception exception1 = assertThrows(Exception.class, () -> passengerRepository.deletePassenger(6));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Id not found";
-
-        assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
-                () -> Mockito.verify(passengerRepositoryMock, Mockito.times(1)).deletePassenger(1)
-        );
+        Mockito.verify(passengerRepositoryMock, Mockito.times(1)).deletePassenger(1);
     }
 }

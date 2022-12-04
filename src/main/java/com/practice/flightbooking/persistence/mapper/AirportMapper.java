@@ -13,8 +13,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface AirportMapper {
 
-    AirportMapper airportMapper = Mappers.getMapper(AirportMapper.class);
-
     @Mapping(source = "idAirport", target = "airportId")
     Airport toAirport(AirportEntity airportEntity);
 

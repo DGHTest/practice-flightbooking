@@ -3,16 +3,17 @@ package com.practice.flightbooking.domain.repository;
 import com.practice.flightbooking.domain.Travel;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TravelRepository {
 
     List<Travel> getAllTravels();
 
-    Travel getTravelById(int travelId) throws Exception;
+    Optional<Travel> getTravelById(int travelId);
 
-    List<Travel> getByIdArrivalFlight(int arrivalId) throws Exception;
+    Optional<List<Travel>> getByIdArrivalFlight(int arrivalId);
 
-    List<Travel> getByIdDeparture(int departureId) throws Exception;
+    Optional<List<Travel>> getByIdDeparture(int departureId);
 
-    Travel saveTravel(Travel travel) throws Exception;
+    Travel saveTravel(Travel travel);
 }

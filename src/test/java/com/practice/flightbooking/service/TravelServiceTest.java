@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("dev")
 class TravelServiceTest {
 
     @Autowired
@@ -81,22 +83,22 @@ class TravelServiceTest {
 
     @Test
     @DisplayName("Should return one travel with the specific id using the repository")
-    void getTravelById() throws Exception {
+    void getTravelById() {
         Mockito.when(travelRepository.getTravelById(2))
-                .thenReturn(travels.get(1));
+                .thenReturn(Optional.of(travels.get(1)));
 
-        Travel travelById = travelService.getTravelById(2);
+        Travel travelById = travelService.getTravelById(2).get();
 
         assertEquals(2, travelById.getTravelId());
     }
 
     @Test
     @DisplayName("Should return all travels with the specific idArrivalFlight using the repository")
-    void getByIdArrivalFlight() throws Exception {
+    void getByIdArrivalFlight() {
         Mockito.when(travelRepository.getByIdArrivalFlight(6))
-                .thenReturn(Arrays.asList(travels.get(1), travels.get(2)));
+                .thenReturn(Optional.of(Arrays.asList(travels.get(1), travels.get(2))));
 
-        List<Travel> travelsByIdArrivalFlight = travelService.getByIdArrivalFlight(6);
+        List<Travel> travelsByIdArrivalFlight = travelService.getByIdArrivalFlight(6).get();
 
         assertAll(
                 () -> assertThat(travelsByIdArrivalFlight.size()).isEqualTo(2),
@@ -108,11 +110,11 @@ class TravelServiceTest {
 
     @Test
     @DisplayName("Should return all travels with the specific idDeparture using the repository")
-    void getByIdDeparture() throws Exception {
+    void getByIdDeparture() {
         Mockito.when(travelRepository.getByIdDeparture(4))
-                .thenReturn(Arrays.asList(travels.get(0), travels.get(1)));
+                .thenReturn(Optional.of(Arrays.asList(travels.get(0), travels.get(1))));
 
-        List<Travel> travelsByIdArrivalFlight = travelService.getByIdDeparture(4);
+        List<Travel> travelsByIdArrivalFlight = travelService.getByIdDeparture(4).get();
 
         assertAll(
                 () -> assertThat(travelsByIdArrivalFlight.size()).isEqualTo(2),
@@ -124,7 +126,7 @@ class TravelServiceTest {
 
     @Test
     @DisplayName("Should save one travel and return it using the repository")
-    void saveTravel() throws Exception {
+    void saveTravel() {
         Travel travel = Travel.builder()
                 .setTravelId(51)
                 .setArrivalFlightId(32)

@@ -22,31 +22,21 @@ public class PassengersTravelRepositoryImpl implements PassengersTravelRepositor
     private PassengersTravelMapper passengersTravelMapper;
 
     @Override
-    public List<PassengersTravel> getPassengersTravelByIdPassenger(int passengerId) throws Exception {
-        Optional<List<PassengersTravelsEntity>> passengersTravelsByIdPassenger =
-                passengersTravelsCrudRepository.findByPassengerTravelsIdIdPassenger(passengerId);
-
-        if (passengersTravelsByIdPassenger.isPresent()) {
-            return passengersTravelMapper.toPassengersTravels(passengersTravelsByIdPassenger.get());
-        } else {
-            throw new Exception("Passenger id not found");
-        }
+    public Optional<List<PassengersTravel>> getPassengersTravelByIdPassenger(int passengerId) {
+        return passengersTravelsCrudRepository.findByPassengerTravelsIdIdPassenger(passengerId)
+                .map(passenger -> passengersTravelMapper.toPassengersTravels(passenger));
     }
 
     @Override
-    public PassengersTravel savePassengersTravel(int travelId, int passengerId) throws Exception {
+    public PassengersTravel savePassengersTravel(int travelId, int passengerId) {
         PassengersTravelsEntityPk passengersTravelsEntityPk = PassengersTravelsEntityPk.builder()
                 .setIdTravel(travelId)
                 .setIdPassenger(passengerId)
                 .create();
 
-        if (!passengersTravelsCrudRepository.existsById(passengersTravelsEntityPk)) {
-            PassengersTravelsEntity passengersTravelsEntity = PassengersTravelsEntity.builder()
+        PassengersTravelsEntity passengersTravelsEntity = PassengersTravelsEntity.builder()
                     .setPassengerTravelsId(passengersTravelsEntityPk).create();
 
             return passengersTravelMapper.toPassengersTravel(passengersTravelsCrudRepository.save(passengersTravelsEntity));
-        } else {
-            throw new Exception("Id already exist");
-        }
     }
 }

@@ -21,47 +21,26 @@ public class AirportRepositoryImpl implements AirportRepository {
     private AirportMapper airportMapper;
 
     @Override
-    public Airport getById(int id) throws Exception {
-        Optional<AirportEntity> airportById = airportCrudRepository.findById(id);
-
-        if (airportById.isPresent()) {
-            return airportMapper.toAirport(airportById.get());
-        } else {
-            throw new Exception("Airports by id not found");
-        }
+    public Optional<Airport> getById(int id) {
+        return airportCrudRepository.findById(id)
+                .map(airport -> airportMapper.toAirport(airport));
     }
 
     @Override
-    public List<Airport> getByCountry(String country) throws Exception {
-        Optional<List<AirportEntity>> airportByCountry = airportCrudRepository.findByCountry(country);
-
-        if (airportByCountry.isPresent()) {
-            return airportMapper.toAirports(airportByCountry.get());
-        } else {
-            throw new Exception("Airports by country not found");
-        }
+    public Optional<List<Airport>> getByCountry(String country) {
+        return airportCrudRepository.findByCountry(country)
+                .map(airport -> airportMapper.toAirports(airport));
     }
 
     @Override
-    public List<Airport> getByState(String state) throws Exception {
-        Optional<List<AirportEntity>> airportsByState = airportCrudRepository.findByState(state);
-
-        if (airportsByState.isPresent()) {
-            return airportMapper.toAirports(airportsByState.get());
-        } else {
-            throw new Exception("Airports by state not found");
-        }
+    public Optional<List<Airport>> getByState(String state) {
+        return airportCrudRepository.findByState(state)
+                .map(airport -> airportMapper.toAirports(airport));
     }
 
     @Override
-    public List<Airport> getByCity(String city) throws Exception {
-        Optional<List<AirportEntity>> airportsByCity = airportCrudRepository.findByCity(city);
-
-        if (airportsByCity.isPresent()) {
-            return airportMapper.toAirports(airportsByCity.get());
-        } else {
-            throw new Exception("Airports by city not found");
-        }
-
+    public Optional<List<Airport>> getByCity(String city) {
+        return airportCrudRepository.findByCity(city)
+                .map(airport -> airportMapper.toAirports(airport));
     }
 }

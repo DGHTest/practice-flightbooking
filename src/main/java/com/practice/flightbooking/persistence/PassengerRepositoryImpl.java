@@ -21,67 +21,44 @@ public class PassengerRepositoryImpl implements PassengerRepository {
     private PassengerMapper passengerMapper;
 
     @Override
-    public Passenger getPassengerById(int passengerId) throws Exception {
-        Optional<PassengerEntity> passengerById = passengerCrudRepository.findById(passengerId);
-
-        if (passengerById.isPresent()) {
-            return passengerMapper.toPassenger(passengerById.get());
-        } else {
-            throw new Exception("Passenger id not found");
-        }
+    public Optional<Passenger> getPassengerById(int passengerId) {
+        return passengerCrudRepository.findById(passengerId)
+                .map(passenger -> passengerMapper.toPassenger(passenger));
     }
 
     @Override
-    public Passenger getPassengerByEmail(String email) throws Exception {
-        Optional<PassengerEntity> passengerByEmail = passengerCrudRepository.findByEmail(email);
-
-        if (passengerByEmail.isPresent()) {
-            return passengerMapper.toPassenger(passengerByEmail.get());
-        } else {
-            throw new Exception("Email not found");
-        }
+    public Optional<Passenger> getPassengerByEmail(String email) {
+        return passengerCrudRepository.findByEmail(email)
+                .map(passenger -> passengerMapper.toPassenger(passenger));
     }
 
     @Override
-    public Passenger savePassenger(Passenger passenger) throws Exception {
+    public Passenger savePassenger(Passenger passenger) {
         PassengerEntity passengerEntity = passengerMapper.toPassengerEntity(passenger);
-
-        if (!passengerCrudRepository.existsById(passengerEntity.getIdPassenger())) {
-            return passengerMapper.toPassenger(passengerCrudRepository.save(passengerEntity));
-        } else {
-            throw new Exception("Id already exist");
-        }
+        return passengerMapper.toPassenger(passengerCrudRepository.save(passengerEntity));
     }
 
     @Override
-    public void updatePassengerStatusById(boolean status, int passengerId) throws Exception {
-        if (passengerCrudRepository.existsById(passengerId)) {
-            passengerCrudRepository.updatePassengerStatus(status, passengerId);
-        } else {
-            throw new Exception("Id not found");
-        }
+    public void updatePassengerStatusById(boolean status, int passengerId) {
+        passengerCrudRepository.updatePassengerStatus(status, passengerId);
     }
 
     @Override
-    public void deletePassenger(int passengerId) throws Exception {
-        if (passengerCrudRepository.existsById(passengerId)) {
+    public void deletePassenger(int passengerId) {
             passengerCrudRepository.save(PassengerEntity.builder()
                             .setIdPassenger(passengerId)
                             .setLastNames("Default is my last name")
                             .setFirstName("Default")
                             .setBirthDate(LocalDate.of(3000, 01, 01))
                             .setEmail("default" + passengerId + "@default.com")
-                            .setTelephoneNumber("000000000000")
+                            .setTelephoneNumber("000000000000" + passengerId)
                             .setCountry("Default Country")
                             .setState("Default State")
                             .setCity("Default City")
-                            .setPassportNumber(0000000000L + passengerId)
+                            .setPassportNumber(passengerId + 0000000000L)
                             .setExpirationDate(LocalDate.of(2000, 01, 01))
                             .setNationality("DFT")
                             .setStatus(false)
                     .create());
-        } else {
-            throw new Exception("Id not found");
-        }
     }
 }

@@ -5,43 +5,37 @@ import com.practice.flightbooking.domain.repository.PassengerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class PassengerService {
 
     @Autowired
     private PassengerRepository passengerRepository;
 
-    public Passenger getPassengerById(int passengerId) throws Exception {
+    public Optional<Passenger> getPassengerById(int passengerId){
         return passengerRepository.getPassengerById(passengerId);
     }
 
-    public Passenger getPassengerByEmail(String email)throws Exception {
+    public Optional<Passenger> getPassengerByEmail(String email) {
         return passengerRepository.getPassengerByEmail(email);
     }
 
-    public Passenger savePassenger(Passenger passenger) throws Exception {
+    public Passenger savePassenger(Passenger passenger) {
         return passengerRepository.savePassenger(passenger);
     }
 
-    public boolean updatePassengerStatusById(boolean status, int passengerId) throws Exception {
-        try {
-            passengerRepository.updatePassengerStatusById(status, passengerId);
-            return true;
-        } catch (Exception e) {
-            e.getMessage();
-        }
-
-        return false;
+    public boolean updatePassengerStatusById(boolean status, int passengerId){
+        if (getPassengerById(passengerId).isPresent()){
+                passengerRepository.updatePassengerStatusById(status, passengerId);
+                return true;
+        } else {return false;}
     }
 
-    public boolean deletePassenger(int passengerId) throws Exception {
-        try {
+    public boolean deletePassenger(int passengerId) {
+        if (getPassengerById(passengerId).isPresent()){
             passengerRepository.deletePassenger(passengerId);
             return true;
-        } catch (Exception e) {
-            e.getMessage();
-        }
-
-        return false;
+        } else {return false;}
     }
 }

@@ -4,17 +4,18 @@ import com.practice.flightbooking.domain.ArrivalFlight;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface ArrivalFlightRepository {
 
     List<ArrivalFlight> getAllArrivalFlights();
 
-    ArrivalFlight getArrivalById(int arrivalId) throws Exception;
+    Optional<ArrivalFlight> getArrivalById(int arrivalId);
 
-    List<ArrivalFlight> getByIdAirport(int airportId) throws Exception;
+    Optional<List<ArrivalFlight>> getByIdAirport(int airportId);
 
-    List<ArrivalFlight> getByArrivalTime(LocalDateTime arrivalTime) throws Exception;
+    Optional<List<ArrivalFlight>> getByArrivalTime(LocalDateTime arrivalTime);
 
-    ArrivalFlight saveArrival(ArrivalFlight arrivalFlight) throws Exception;
+    ArrivalFlight saveArrival(ArrivalFlight arrivalFlight);
 }

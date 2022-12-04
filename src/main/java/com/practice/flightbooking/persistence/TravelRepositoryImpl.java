@@ -28,46 +28,26 @@ public class TravelRepositoryImpl implements TravelRepository {
     }
 
     @Override
-    public Travel getTravelById(int travelId) throws Exception {
-        Optional<TravelEntity> travelById = travelCrudRepository.findById(travelId);
-
-        if (travelById.isPresent()) {
-            return travelMapper.toTravel(travelById.get());
-        } else {
-            throw new Exception("Travel by id not found");
-        }
+    public Optional<Travel> getTravelById(int travelId) {
+        return travelCrudRepository.findById(travelId)
+                .map(travel -> travelMapper.toTravel(travel));
     }
 
     @Override
-    public List<Travel> getByIdArrivalFlight(int arrivalId) throws Exception {
-        Optional<List<TravelEntity>> travelsByArrival = travelCrudRepository.findByIdArrivalFlightAndStatus(arrivalId, true);
-
-        if (travelsByArrival.isPresent()) {
-            return travelMapper.toTravels(travelsByArrival.get());
-        } else {
-            throw new Exception("Arrival flight id not found");
-        }
+    public Optional<List<Travel>> getByIdArrivalFlight(int arrivalId) {
+        return travelCrudRepository.findByIdArrivalFlightAndStatus(arrivalId, true)
+                .map(travels -> travelMapper.toTravels(travels));
     }
 
     @Override
-    public List<Travel> getByIdDeparture(int departureId) throws Exception {
-        Optional<List<TravelEntity>> travelsByArrival = travelCrudRepository.findByIdDepartureAndStatus(departureId, true);
-
-        if (travelsByArrival.isPresent()) {
-            return travelMapper.toTravels(travelsByArrival.get());
-        } else {
-            throw new Exception("Departure id not found");
-        }
+    public Optional<List<Travel>> getByIdDeparture(int departureId) {
+        return travelCrudRepository.findByIdDepartureAndStatus(departureId, true)
+                .map(travels -> travelMapper.toTravels(travels));
     }
 
     @Override
-    public Travel saveTravel(Travel travel) throws Exception {
+    public Travel saveTravel(Travel travel) {
         TravelEntity travelEntity = travelMapper.toTravelEntity(travel);
-
-        if (!travelCrudRepository.existsById(travelEntity.getIdTravel())) {
-            return travelMapper.toTravel(travelCrudRepository.save(travelEntity));
-        } else {
-            throw new Exception("Id already exist");
-        }
+        return travelMapper.toTravel(travelCrudRepository.save(travelEntity));
     }
 }

@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -26,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("dev")
 class TicketRepositoryImplTest {
 
     @Autowired
@@ -66,21 +68,14 @@ class TicketRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Should return one ticketEntity with his specific id and then the mapper should transform to ticket or throw an error if the id is not found")
-    void getTicketById() throws Exception {
+    @DisplayName("Should return one ticketEntity with his specific id and then the mapper should transform to ticket")
+    void getTicketById() {
         Mockito.when(ticketCrudRepository.findById(3))
                 .thenReturn(Optional.of((optionalTickets.get().get(2))));
 
-        Ticket ticketsById = ticketRepository.getTicketById(3);
-
-        Exception exception1 = assertThrows(Exception.class, () -> ticketRepository.getTicketById(10));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Ticket by id not found";
+        Ticket ticketsById = ticketRepository.getTicketById(3).get();
 
         assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
                 () -> assertEquals(3, ticketsById.getTicketId()),
                 () -> assertEquals(8, ticketsById.getPassengerId()),
                 () -> assertEquals(90, ticketsById.getTravelId())
@@ -88,21 +83,14 @@ class TicketRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Should return all ticketEntities with the specific idPassenger and then the mapper should transform to tickets or throw an error if the idPassenger is not found")
-    void getByIdPassenger() throws Exception {
+    @DisplayName("Should return all ticketEntities with the specific idPassenger and then the mapper should transform to tickets")
+    void getByIdPassenger() {
         Mockito.when(ticketCrudRepository.findByIdPassenger(8))
                 .thenReturn(Optional.of(Arrays.asList(optionalTickets.get().get(1), optionalTickets.get().get(2))));
 
-        List<Ticket> ticketsByIdPassenger = ticketRepository.getByIdPassenger(8);
-
-        Exception exception1 = assertThrows(Exception.class, () -> ticketRepository.getByIdPassenger(10));
-        Exception exception2 = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Passenger id not found";
+        List<Ticket> ticketsByIdPassenger = ticketRepository.getByIdPassenger(8).get();
 
         assertAll(
-                () -> assertEquals(expectedMessage, exception1.getMessage()),
-                () -> assertNotEquals(expectedMessage, exception2.getMessage()),
                 () -> assertThat(ticketsByIdPassenger.size()).isEqualTo(2),
                 () -> assertEquals(Arrays.asList(2, 3), ticketsByIdPassenger.stream().map(Ticket::getTicketId).collect(Collectors.toList())),
                 () -> assertEquals(Arrays.asList(8, 8), ticketsByIdPassenger.stream().map(Ticket::getPassengerId).collect(Collectors.toList())),
@@ -111,8 +99,8 @@ class TicketRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Should save one ticketEntity and return it with the mapper to ticket or throw an error if the id already exist")
-    void saveTicket() throws Exception {
+    @DisplayName("Should save one ticketEntity and return it with the mapper to ticket")
+    void saveTicket() {
         TicketEntity ticketEntity = TicketEntity.builder()
                 .setIdTicket(1)
                 .setIdPassenger(4)
@@ -122,14 +110,9 @@ class TicketRepositoryImplTest {
 
         Mockito.when(ticketCrudRepository.save(ArgumentMatchers.any())).thenReturn(ticketEntity);
 
-        Ticket saveTicket = ticketRepository.saveTicket(Mappers.getMapper(TicketMapper.class).toTicket(ticketEntity));
-
-        Exception exception = assertThrows(Exception.class, () -> Integer.parseInt("id "));
-
-        String expectedMessage = "Id already exist";
+        Ticket saveTicket = ticketRepository.saveTicket(ticketMapper.toTicket(ticketEntity));
 
         assertAll(
-                () -> assertNotEquals(expectedMessage, exception.getMessage()),
                 () -> assertEquals(ticketEntity.getIdTicket(), saveTicket.getTicketId()),
                 () -> assertEquals(ticketEntity.getIdPassenger(), saveTicket.getPassengerId()),
                 () -> assertEquals(ticketEntity.getIdTravel(), saveTicket.getTravelId()),

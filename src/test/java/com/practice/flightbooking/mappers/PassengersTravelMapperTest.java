@@ -7,12 +7,18 @@ import com.practice.flightbooking.persistence.mapper.PassengersTravelMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@ActiveProfiles("dev")
 class PassengersTravelMapperTest {
 
-    private PassengersTravelMapper mapper = Mappers.getMapper(PassengersTravelMapper.class);
+    @Autowired
+    private PassengersTravelMapper mapper;
 
     @Test
     @DisplayName("Should transform the passengersTravelEntity information to passengersTravelService information")
