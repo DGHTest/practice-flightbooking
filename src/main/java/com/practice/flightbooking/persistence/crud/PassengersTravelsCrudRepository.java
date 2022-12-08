@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface PassengersTravelsCrudRepository extends BasicCrudRepository<PassengersTravelsEntity, PassengersTravelsEntityPk> {
 
     Optional<List<PassengersTravelsEntity>> findByPassengerTravelsIdIdPassenger(Integer idPassenger);
+
+    Optional<List<PassengersTravelsEntity>> findByPassengerTravelsIdIdTravel(Integer idTravel);
 }

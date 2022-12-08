@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.flightbooking.domain.PassengersTravel;
 import com.practice.flightbooking.domain.service.PassengerService;
 import com.practice.flightbooking.domain.service.PassengersTravelService;
+import com.practice.flightbooking.persistence.crud.PassengersTravelsCrudRepository;
 import com.practice.flightbooking.web.controller.PassengerController;
 import com.practice.flightbooking.web.controller.PassengersTravelController;
+import com.practice.flightbooking.web.controller.precondition.CapacityTravel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -36,6 +38,9 @@ class PassengersTravelControllerTest {
 
     @MockBean
     private PassengersTravelService passengersTravelService;
+
+    @MockBean
+    private CapacityTravel capacityTravel;
 
     @Test
     @DisplayName("Should return all travelId in json format with a specific passengerId using the service or return a not found")
@@ -74,9 +79,12 @@ class PassengersTravelControllerTest {
     }
 
     @Test
-    @DisplayName("Should save two ids in the url using the service or return a bad request")
+    @DisplayName("Should save two ids in the url using the service")
     void savePassengersTravel() throws Exception {
         PassengersTravel idReturned = PassengersTravel.builder().setTravelId(654).create();
+
+        Mockito.when(capacityTravel.capacity(654))
+                .thenReturn(true);
 
         Mockito.when(passengersTravelService.savePassengersTravel(654, 65))
                 .thenReturn(idReturned);
@@ -87,5 +95,19 @@ class PassengersTravelControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(idReturned)))
                         .andExpect(status().isCreated());
+    }
+
+    @Test
+    @DisplayName("Should throw bad request with personality body")
+    void savePassengersTravel_withError() throws Exception {
+        PassengersTravel idReturned = PassengersTravel.builder().setTravelId(654).create();
+
+        Mockito.when(capacityTravel.capacity(654))
+                .thenReturn(false);
+
+        mockMvc.perform(post("/passenger-travels/save/654-65")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("Capacity in travel: 654 has reached the limit"))
+                .andExpect(status().isBadRequest());
     }
 }

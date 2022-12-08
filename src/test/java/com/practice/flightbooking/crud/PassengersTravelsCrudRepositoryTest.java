@@ -98,6 +98,28 @@ class PassengersTravelsCrudRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should return all PassengersTravelsEntity by a specific idTravel")
+    public void findByPassengerTravelsIdIdTravel() {
+        List<PassengersTravelsEntity> passengersTravels1 = crudRepository.findByPassengerTravelsIdIdTravel(3).get();
+
+        assertAll("Test with the data.sql",
+                () -> assertNotNull(passengersTravels1),
+                () -> Assertions.assertThat(passengersTravels1.size()).isEqualTo(1),
+                () -> assertEquals(Arrays.asList(2), passengersTravels1.stream().map(ids -> ids.getPassengerTravelsId().getIdPassenger()).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(3), passengersTravels1.stream().map(ids -> ids.getPassengerTravelsId().getIdTravel()).collect(Collectors.toList()))
+        );
+
+        List<PassengersTravelsEntity> passengersTravels2 = crudRepository.findByPassengerTravelsIdIdTravel(1).get();
+
+        assertAll("Test with a persist entity",
+                () -> assertNotNull(passengersTravels2),
+                () -> Assertions.assertThat(passengersTravels2.size()).isEqualTo(2),
+                () -> assertEquals(Arrays.asList(1, 2), passengersTravels2.stream().map(ids -> ids.getPassengerTravelsId().getIdPassenger()).collect(Collectors.toList())),
+                () -> assertEquals(Arrays.asList(1, 1), passengersTravels2.stream().map(ids -> ids.getPassengerTravelsId().getIdTravel()).collect(Collectors.toList()))
+        );
+    }
+
+    @Test
     @DisplayName("Should save a PassengersTravelsEntity in the database")
     public void savePassengersTravelsEntity() {
 
